@@ -7,9 +7,9 @@ address of the system that queries it.
 The `mlplugin` is a CoreDNS plugin that does exactly that however, due to the lack of machine learning capabilities of golang, 
 the `mlplugin` communicates with a flask server namely: `dns_monitoring_server.py` which has a pre-trained machine learning
 model that classifies whether the domain name queried is malicious or not and saves the result date, time, ip as well as
-the prediction in a csv file `log.csv`.
+the prediction in a JSON file `log.json`.
 
-The `log.csv` file will further be analysed (TBC) using a graphing library such as [Dash.](https://plotly.com/dash/)
+The `log.json` file will further be analysed (TBC) using a graphing library such as [Dash.](https://plotly.com/dash/)
 
 #### Incorporating the `mlplugin` into CoreDNS
 

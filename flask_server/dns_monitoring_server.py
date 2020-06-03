@@ -1,3 +1,5 @@
+import json
+
 from flask import Flask, jsonify, request
 import numpy as np
 from datetime import datetime
@@ -29,11 +31,13 @@ def server():
     model = models.load_model(
         'C:\Chanakya\Projects\coredns_dns_ml_firewall\Code\Jupyter Notebooks\saved_models\dns_alert_model.hdf5')
 
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         domain_json = request.get_json()
         key = list(domain_json.keys())
         domain_name = domain_json[key[0]]
         ip = domain_json[key[1]]
+
+        date_time = datetime.now()
 
         input_ = np.zeros(256)
         input_[0:len(domain_json[key[0]])] = string_to_ascii(domain_json[key[0]])
@@ -41,42 +45,29 @@ def server():
         send = str(model.predict(input_)[0, 0])
 
         try:
-            csv_input = pd.read_csv('log.csv', index_col=False)
-            date = domain_name + '_date'
-            time = domain_name + '_time'
-            ip_ = domain_name + '_ip'
-            pred = domain_name + '_pred'
+            with open('log.json') as json_file:
+                data = json.load(json_file)
 
-            print(csv_input.columns)
-            if date in list(csv_input.columns):
-                zeros = sum(csv_input[date] == '0')
-                print(zeros)
-                if zeros == 0:
-                    df = pd.DataFrame({date: [datetime.now().date()], time: [datetime.now().time()], ip_: [ip], pred: [float(send)]})
-                    csv_input = csv_input.append(df).fillna(0)
-                else:
-                    n_zeros = sum(csv_input[date] != '0')
-                    csv_input[date][n_zeros] = datetime.now().date()
-                    csv_input[time][n_zeros] = datetime.now().time()
-                    csv_input[ip_][n_zeros] = ip
-                    csv_input[pred][n_zeros] = float(send)
+            if domain_name in list(data.keys()):
+                data[domain_name]['date'].append([date_time.date().day, date_time.date().month, date_time.date().year])
+                data[domain_name]['time'].append(
+                    [date_time.time().hour, date_time.time().minute, date_time.time().second])
+                data[domain_name]['ip'].append(ip)
+                data[domain_name]['prediction'].append(float(send))
             else:
-                row, col = csv_input.shape
-                csv_input[date] = [datetime.now().date(), *('0' * (row - 1))]
-                csv_input[time] = [datetime.now().time(), *('0' * (row - 1))]
-                csv_input[ip_] = [ip, *np.zeros(row - 1)]
-                csv_input[pred] = [float(send), *np.zeros(row - 1)]
+                data[domain_name] = {'date': [date_time.date().day, date_time.date().month, date_time.date().year],
+                                     'time': [[date_time.time().hour, date_time.time().minute, date_time.time().second]],
+                                     'ip': [ip], 'prediction': [float(send)]}
 
-            csv_input.to_csv('log.csv', index=False)
+            with open('log.json', 'w') as json_file:
+                json.dump(data, json_file, sort_keys=True)
 
         except:
-            csv_input = pd.DataFrame([[datetime.now().date(), datetime.now().time(), ip, float(send)]],
-                                     columns=[domain_name + '_date',
-                                              domain_name + '_time',
-                                              domain_name + '_ip',
-                                              domain_name + '_pred'
-                                              ])
-            csv_input.to_csv('log.csv', index=False)
+            data = {domain_name: {'date': [[date_time.date().day, date_time.date().month, date_time.date().year]],
+                                  'time': [[date_time.time().hour, date_time.time().minute, date_time.time().second]],
+                                  'ip': [ip], 'prediction': [float(send)]}}
+            with open('log.json', 'w') as json_file:
+                json.dump(data, json_file, sort_keys=True)
 
         return jsonify({'p': send})
 
