@@ -2,6 +2,7 @@ import json
 
 from flask import Flask, jsonify, request
 import numpy as np
+from elasticsearch import Elasticsearch
 from datetime import datetime
 import tensorflow as tf
 from IPython.display import HTML, display
@@ -28,6 +29,9 @@ def string_to_ascii(string):
 
 @app.route('/', methods=['GET', 'POST'])
 def server():
+
+    es = Elasticsearch()
+
     model = models.load_model(
         'C:\Chanakya\Projects\coredns_dns_ml_firewall\Code\Jupyter Notebooks\saved_models\dns_alert_model.hdf5')
 
@@ -44,30 +48,24 @@ def server():
         input_ = np.reshape(input_, (1, 16, 16, 1))
         send = str(model.predict(input_)[0, 0])
 
-        try:
-            with open('log.json') as json_file:
-                data = json.load(json_file)
-
-            if domain_name in list(data.keys()):
-                data[domain_name]['date'].append([date_time.date().day, date_time.date().month, date_time.date().year])
-                data[domain_name]['time'].append(
-                    [date_time.time().hour, date_time.time().minute, date_time.time().second])
-                data[domain_name]['ip'].append(ip)
-                data[domain_name]['prediction'].append(float(send))
+        if domain_name in es.indices.get('*.com'):
+            body = es.get(index=domain_name, id=1)['_source']
+            body['ip'].append(ip)
+            body['time'].append([date_time.time().hour, date_time.time().minute, date_time.time().second])
+            body['date'].append([[date_time.date().day, date_time.date().month, date_time.date().year]])
+            if ip in body['count'].keys():
+                body['count'][ip] += 1
             else:
-                data[domain_name] = {'date': [date_time.date().day, date_time.date().month, date_time.date().year],
-                                     'time': [[date_time.time().hour, date_time.time().minute, date_time.time().second]],
-                                     'ip': [ip], 'prediction': [float(send)]}
+                body['count'][ip] = 1
+            update_body = {
+                'doc': {'ip': body['ip'], 'time': body['time'], 'date': body['date'], 'count': body['count']}}
+            es.update(index=domain_name, id=1, body=update_body)
 
-            with open('log.json', 'w') as json_file:
-                json.dump(data, json_file, sort_keys=True)
-
-        except:
-            data = {domain_name: {'date': [[date_time.date().day, date_time.date().month, date_time.date().year]],
-                                  'time': [[date_time.time().hour, date_time.time().minute, date_time.time().second]],
-                                  'ip': [ip], 'prediction': [float(send)]}}
-            with open('log.json', 'w') as json_file:
-                json.dump(data, json_file, sort_keys=True)
+        else:
+            body = {'ip': [ip], 'time': [[date_time.time().hour, date_time.time().minute, date_time.time().second]],
+                    'date':
+                        [[date_time.date().day, date_time.date().month, date_time.date().year]], 'count': {ip: 1}}
+            es.index(index=domain_name, id=1, body=body)
 
         return jsonify({'p': send})
 
