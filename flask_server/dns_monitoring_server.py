@@ -64,7 +64,8 @@ def server():
         else:
             body = {'ip': [ip], 'time': [[date_time.time().hour, date_time.time().minute, date_time.time().second]],
                     'date':
-                        [[date_time.date().day, date_time.date().month, date_time.date().year]], 'count': {ip: 1}}
+                        [[date_time.date().day, date_time.date().month, date_time.date().year]], 'count': {ip: 1},
+                    'status': send}
             es.index(index=domain_name, id=1, body=body)
 
         return jsonify({'p': send})
