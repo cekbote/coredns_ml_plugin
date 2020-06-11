@@ -53,15 +53,16 @@ background while storing or updating queries.
 
 The results will further be analysed (TBC) using a graphing library such as [Dash.](https://plotly.com/dash/)
 
-#### Incorporating the `mlplugin` into CoreDNS
+## Implementation
 
-The recommended procedure for adding external plugins can be found [here.](https://github.com/coredns/example)
+### TensorFlow Model
 
-However, for prototyping you can just copy the `mlplugin` directory into the `coredns/plugins` directory. 
+### CoreDNS Build
 
-According to the method you choose, the `plugin.cfg` and the `Corefile` would have to be changed accordingly.
+TODO
 
-#### Running the DNS Monitoring Server
+### Application Middlware with Flask
+
 
 For running the Flask server, a Python environment would be required to run `dns_monitoring_server.py`. This server 
 runs on `127.0.0.1/5000`. 
@@ -69,3 +70,12 @@ runs on `127.0.0.1/5000`.
 The model that is currently being used in `dns_monitoring_server.py` can be found 
 [here.](https://github.com/Chanakya-Ekbote/dns_alert_model/tree/master/saved_models) The training notebook and the 
 training procedure can be found [here.](https://github.com/Chanakya-Ekbote/dns_alert_model)
+
+### Testing Harness
+
+TODO
+
+### Visualization Dashboard
+
+TODO
+
