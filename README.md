@@ -1,4 +1,16 @@
-## CoreDNS : DNS Monitoring using Machine Learning
+# CoreDNS Machine Learning Plugin
+
+This CoreDNS plugin connects CoreDNS server to Machine Learning Environment for
+DNS request and response analysis, monitoring and alerting. 
+
+This plugin is the result of my work on a project during GSoC 2020. The goal of 
+the project was introducing the integration of machine learning capabilities
+into CoreDNS server functions.
+
+The initial use case was the identification of the DNS requests for the records
+of the domains that could be used by malicious hackers and other computer 
+criminals. Upon the identification of the requests the plugin would either alert
+of or block the requests and responses.  
 
 The goal of this project is to create a CoreDNS plugin that uses machine learning to identify whether a domain name 
 queried by a client is malicious or not and monitor the date as well as the time when the domain name is queried and also the IP
