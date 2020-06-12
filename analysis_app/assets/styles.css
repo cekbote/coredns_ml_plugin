@@ -34,7 +34,7 @@ body {
 .dcc_control {
   margin: 0;
   padding: 5px;
-  width: calc(100%-40px);
+  width: calc(100%- 40px);
 }
 
 .control_label {
@@ -42,7 +42,7 @@ body {
   padding: 10px;
   padding-bottom: 0px;
   margin-bottom: 0px;
-  width: calc(100%-40px);
+  width: calc(100%- 40px);
 }
 
 .rc-slider {

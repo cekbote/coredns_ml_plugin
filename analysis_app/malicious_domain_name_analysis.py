@@ -2,6 +2,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from datetime import datetime as dt
+import dash_table
 from dash.dependencies import Input, Output, State
 import copy
 from elasticsearch import Elasticsearch
@@ -42,7 +43,8 @@ app.layout = html.Div(children=[
                         html.Div([
                             html.P(
                                 "Domain Name:",
-                                style={'display': 'inline', 'color': '#2e86c1', 'font-size': '18px'},
+                                style={'display': 'inline', 'color': '#2e86c1',
+                                       'font-size': '18px'},
                                 className="control_label"
                             ),
                             dcc.Input(
@@ -54,7 +56,8 @@ app.layout = html.Div(children=[
                         ]),
                         html.Div(id='input_message', className="control_label"),
                         html.P("Enter the date range for the analysis:",
-                               style={'color': '#2e86c1', 'font-size': '18px', 'border': '0px'},
+                               style={'color': '#2e86c1', 'font-size': '18px',
+                                      'border': '0px'},
                                className="control_label"),
                         dcc.DatePickerRange(
                             id='date_range',
@@ -62,11 +65,14 @@ app.layout = html.Div(children=[
                             className="dcc_control",
                             style={'borderWidth': '0px'},
                         ),
-                        html.Div(id='date_message', className="control_label", style={'margin-bottom': '10px'}),
+                        html.Div(id='date_message', className="control_label",
+                                 style={'margin-bottom': '10px'}),
                         html.Div([
                             html.Div([
                                 html.P("Requests per:",
-                                       style={'display': 'inline', 'color': '#2e86c1', 'font-size': '18px'},
+                                       style={'display': 'inline',
+                                              'color': '#2e86c1',
+                                              'font-size': '18px'},
                                        className="control_label", ),
                                 dcc.RadioItems(
                                     id="requests_freq",
@@ -80,12 +86,15 @@ app.layout = html.Div(children=[
                                     className="dcc_control",
                                 ),
                             ]),
-                            html.Div(id='radio_button_message', className="control_label",
+                            html.Div(id='radio_button_message',
+                                     className="control_label",
                                      style={'margin-bottom': '10px'}),
                             html.Div([
                                 html.P(
                                     "Hour Range:",
-                                    style={'display': 'inline', 'color': '#2e86c1', 'font-size': '18px'},
+                                    style={'display': 'inline',
+                                           'color': '#2e86c1',
+                                           'font-size': '18px'},
                                     className="control_label"
                                 ),
                                 dcc.Input(
@@ -97,7 +106,9 @@ app.layout = html.Div(children=[
                                 ),
                                 html.P(
                                     "to",
-                                    style={'display': 'inline', 'color': '#2e86c1', 'font-size': '18px'},
+                                    style={'display': 'inline',
+                                           'color': '#2e86c1',
+                                           'font-size': '18px'},
                                     className="control_label"
                                 ),
                                 dcc.Input(
@@ -109,14 +120,19 @@ app.layout = html.Div(children=[
                                 ),
 
                             ], id='hour_range'),
-                            html.Div(id='hour_range_message', className="control_label", style={'margin-bottom': '10px'}),
+                            html.Div(id='hour_range_message',
+                                     className="control_label",
+                                     style={'margin-bottom': '10px'}),
                             html.Div([html.P("Submit the Queries:",
-                                             style={'display': 'inline', 'color': '#2e86c1', 'font-size': '18px'},
+                                             style={'display': 'inline',
+                                                    'color': '#2e86c1',
+                                                    'font-size': '18px'},
                                              className="control_label", ),
                                       html.Button('Submit',
                                                   id='submit_input',
                                                   n_clicks=0,
-                                                  style={'float': 'center', 'margin-left': '30px',
+                                                  style={'float': 'center',
+                                                         'margin-left': '30px',
                                                          'color': '#2e86c1'}, ),
                                       ], ),
                         ]),
@@ -133,18 +149,75 @@ app.layout = html.Div(children=[
             ),
             html.Div([
                 dcc.Tabs(id='tabs-example', value='tab-1', children=[
-                    dcc.Tab([html.Div([dcc.Graph(id='freq_graph', )]), ], label='Requests Plot', value='tab-1',
+                    dcc.Tab([html.Div([dcc.Graph(id='freq_graph', )]), ],
+                            label='Requests Plot', value='tab-1',
                             className='pretty_container'),
-                    dcc.Tab([], label='Queries per IP Address', value='tab-3', className='pretty_container'),
-                    dcc.Tab([], label='Top malicious domains queried', value='tab-2', className='pretty_container'),
+                    dcc.Tab([
+                        html.Div([
+                            html.Br(),
+                            html.P(
+                                "List of IP addresses that queried the Domain",
+                                style={'color': '#333',
+                                       'font-size': '18px',
+                                       'text-align': 'center'
+                                       },
+                                # className="control_label"
+                            ),
+                            html.Br(),
+                            dash_table.DataTable(
+                                id='ip_table_',
+                                columns=[{'id': 'sl_no', 'name': 'Sl. No.'},
+                                         {'id': 'ip', 'name': 'IP Address'},
+                                         {'id': 'count', 'name': 'Queries'}],
+                                fixed_rows={'headers': True},
+                                style_table={
+                                    'height': 380,
+                                    'overflowY': 'auto',
+                                    'backgroundColor': '#F9F9F9',
+                                    'margin-left': '10px'
+                                },
+                                style_as_list_view=True,
+                                style_cell={
+                                    'padding': '5px',
+                                    'backgroundColor': '#F9F9F9',
+                                    'whiteSpace': 'no-wrap',
+                                    'overflow': 'hidden',
+                                    'textOverflow': 'ellipsis',
+                                    'textAlign': 'center',
+                                    'font-family': 'Arial',
+                                    'color': '#333',
+                                    'fontSize': 15
+                                },
+                                style_header={
+                                    'fontWeight': 'bold'
+                                },
+                            )
+                        ], )
+                    ], label='Queries per IP Address', value='tab-2',
+                        className='pretty_container', id='ip_table'),
+                    dcc.Tab([], label='Top malicious domains queried',
+                            value='tab-3', className='pretty_container'),
 
                 ]),
 
-            ], className="pretty_container eight columns", style={'color': '#2e86c1', 'font-size': '16px'}),
+            ], className="pretty_container eight columns",
+                style={'color': '#2e86c1', 'font-size': '16px'}),
 
         ],
         className="row flex-display",
     ),
+    dcc.Graph(
+        id='example-graph',
+        figure={
+            'data': [
+                {'x': ['google.com', 'ass.com'], 'y': [4, 5], 'type': 'bar',
+                 'name': 'SF'},
+            ],
+            'layout': {
+                'title': 'Dash Data Visualization'
+            }
+        }
+    )
 
 ])
 
@@ -158,8 +231,10 @@ app.layout = html.Div(children=[
 def input_message(n_clicks, value):
     if value is None or value == '':
         return 'Please enter a Domain Name'
-    else:
+    elif value in es.indices.get('*.com'):
         return 'You have entered: ' + value
+    else:
+        return 'Domain name does not exist in database'
 
 
 @app.callback(Output('date_message', 'children'),
@@ -241,7 +316,8 @@ def update_pie_graph(n_clicks, value):
     layout_pie = copy.deepcopy(layout)
     layout_pie["title"] = 'Prediction'
     layout_pie["font"] = dict(color="#777777")
-    layout_pie["legend"] = dict(font=dict(color="#777777", size="10"), orientation="v", bgcolor="rgba(0,0,0,0)")
+    layout_pie["legend"] = dict(font=dict(color="#777777", size="10"),
+                                orientation="v", bgcolor="rgba(0,0,0,0)")
     layout_pie["width"] = '350'
     layout_pie["height"] = '150'
     if value is None or value is '':
@@ -252,18 +328,21 @@ def update_pie_graph(n_clicks, value):
                 values=[0.5, 0.5],
                 textinfo="label+percent+name",
                 hole=0.5,
-                marker=dict(colors=["#3498db", "#f5b041 ", "#f39c12", "#92d8d8"]),
+                marker=dict(colors=["#3498db", "#f5b041 "]),
                 domain={"x": [0.2, 0.9], "y": [0.2, 0.9]},
             )]
         figure = dict(data=data, layout=layout_pie)
         return figure
     else:
-        pred = float(es.get(index=value, id=1)['_source']['status'])
+        try:
+            pred = float(es.get(index=value, id=1)['_source']['status'])
+        except:
+            pred = 0.5
         data = [
             dict(
                 type="pie",
                 labels=["Benign", "Malicious"],
-                values=[1-pred, pred],
+                values=[1 - pred, pred],
                 textinfo="label+percent+name",
                 hole=0.5,
                 marker=dict(colors=["#3498db", "#f5b041 "]),
@@ -279,14 +358,15 @@ def update_pie_graph(n_clicks, value):
                State('date_range', 'start_date'),
                State('date_range', 'end_date'),
                State('requests_freq', 'value')])
-def update_input(n_clicks, input_value, start_date, end_date, freq_value):
+def update_line_graph(n_clicks, input_value, start_date, end_date, freq_value):
     layout_count = copy.deepcopy(layout)
     layout_count['title'] = "Requests"
     layout_count['xaxis'] = {'title': 'Requests per'}
     layout_count['yaxis'] = {'title': 'Number of Requests'}
     layout_count['autosize'] = True
     layout_count['margin'] = dict(l=0, r=0, b=20, t=30),
-    if input_value is None or input_value == '' or start_date is None or end_date is None or freq_value is None:
+    if input_value is None or input_value == '' or start_date is None or \
+            end_date is None or freq_value is None:
         data = [
             dict(
                 type="line",
@@ -298,6 +378,23 @@ def update_input(n_clicks, input_value, start_date, end_date, freq_value):
             )]
         figure = dict(data=data, layout=layout_count)
         return figure
+
+
+@app.callback(Output('ip_table_', 'data'),
+              [Input('submit_input', 'n_clicks')],
+              [State('input_text', 'value')])
+def update_ip_table(nclicks, value):
+    if value is None or value == '':
+        return []
+    else:
+        try:
+            count = es.get(index=value, id=1)['_source']['count']
+            data = [dict({'sl_no': j + 1, 'ip': i, 'count': count[i]})
+                    for i, j in zip(sorted(count.keys(), reverse=True),
+                                    range(len(count)))]
+        except:
+            data = []
+        return data
 
 
 if __name__ == '__main__':
