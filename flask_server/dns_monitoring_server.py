@@ -29,7 +29,6 @@ def string_to_ascii(string):
 
 @app.route('/', methods=['GET', 'POST'])
 def server():
-
     es = Elasticsearch()
 
     model = models.load_model(
@@ -47,6 +46,27 @@ def server():
         input_[0:len(domain_json[key[0]])] = string_to_ascii(domain_json[key[0]])
         input_ = np.reshape(input_, (1, 16, 16, 1))
         send = str(model.predict(input_)[0, 0])
+
+        if ('mal' not in es.indices.get('*')) and ('benign' not in es.indices.get('*')):
+            es.index(index='mal', id=1, body={})
+            es.index(index='benign', id=1, body={})
+
+        if float(send) < 0.5:
+            body = es.get(index='benign', id=1)['_source']
+            if domain_name in body.keys():
+                body[domain_name] += 1
+            else:
+                body[domain_name] = 1
+            update_body = {'doc': {domain_name: body[domain_name]}}
+            es.update(index='benign', id=1, body=update_body)
+        else:
+            body = es.get(index='mal', id=1)['_source']
+            if domain_name in body.keys():
+                body[domain_name] += 1
+            else:
+                body[domain_name] = 1
+            update_body = {'doc': {domain_name: body[domain_name]}}
+            es.update(index='mal', id=1, body=update_body)
 
         if domain_name in es.indices.get('*.com'):
             body = es.get(index=domain_name, id=1)['_source']

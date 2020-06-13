@@ -15,8 +15,8 @@ es = Elasticsearch()
 app = dash.Dash(__name__)
 
 layout = dict(
-    autosize=True,
-    automargin=True,
+    # autosize=True,
+    # automargin=True,
     margin=dict(l=0, r=0, b=6, t=30),
     # hovermode="closest",
     plot_bgcolor="#F9F9F9",
@@ -33,7 +33,7 @@ layout = dict(
 app.layout = html.Div(children=[
     dcc.Interval(
         id='interval',
-        interval=1 * 1000,  # in milliseconds
+        interval=5 * 1000,  # in milliseconds
         n_intervals=0
     ),
     html.H1(children='Malicious Domain Name Analysis',
@@ -224,10 +224,11 @@ app.layout = html.Div(children=[
                             dash_table.DataTable(
                                 id='mal_dns_table',
                                 columns=[{'id': 'sl_no', 'name': 'Sl. No.'},
-                                         {'id': 'ip', 'name': 'Domain Names'},
+                                         {'id': 'domain',
+                                          'name': 'Domain Names'},
                                          {'id': 'count', 'name': 'Queries'}],
                                 fixed_rows={'headers': True},
-                                data=[{'sl_no':1, 'ip':1, 'count': 1}],
+                                data=[{'sl_no': 1, 'ip': 1, 'count': 1}],
                                 style_table={
                                     'height': 360,
                                     'overflowY': 'auto',
@@ -251,7 +252,9 @@ app.layout = html.Div(children=[
                                 },
                             )
                         ], id='mal_dns_table_div'),
-                        html.Div([dcc.Graph(id='mal_bar_graph', )],
+                        html.Div([
+                            html.Br(),
+                            dcc.Graph(id='mal_bar_graph', )],
                                  id='mal_bar_graph_div'),
                     ],
                         label='Malicious Domains',
@@ -279,7 +282,8 @@ app.layout = html.Div(children=[
                             dash_table.DataTable(
                                 id='benign_dns_table',
                                 columns=[{'id': 'sl_no', 'name': 'Sl. No.'},
-                                         {'id': 'ip', 'name': 'Domain Names'},
+                                         {'id': 'domain',
+                                          'name': 'Domain Names'},
                                          {'id': 'count', 'name': 'Queries'}],
                                 fixed_rows={'headers': True},
                                 style_table={
@@ -307,8 +311,9 @@ app.layout = html.Div(children=[
                         ], id='benign_dns_table_div'),
 
                         html.Div([
+                            html.Br(),
                             dcc.Graph(id='benign_bar_graph', )],
-                                 id='benign_bar_graph_div'),
+                            id='benign_bar_graph_div'),
 
                     ],
                         label='Benign Domains',
@@ -493,7 +498,7 @@ def update_ip_table(nclicks, value):
         try:
             count = es.get(index=value, id=1)['_source']['count']
             data = [dict({'sl_no': j + 1, 'ip': i, 'count': count[i]})
-                    for i, j in zip(sorted(count.keys(), reverse=True),
+                    for i, j in zip(sorted(count.keys()),
                                     range(len(count)))]
         except:
             data = []
@@ -518,24 +523,47 @@ def display_mal_graph(value):
         return {'display': 'none'}
 
 
+@app.callback(Output('mal_dns_table', 'data'),
+              [Input('mal_toggle_switch', 'value'),
+               Input('interval', 'n_intervals')])
+def update_mal_dns_table(nclicks, value):
+    try:
+        count = es.get(index='mal', id=1)['_source']
+        data = [dict({'sl_no': j + 1, 'domain': i, 'count': count[i]})
+                for i, j in zip(sorted(count.keys()),
+                                range(len(count)))]
+    except:
+        data = []
+    return data
+
+
 @app.callback(Output('mal_bar_graph', 'figure'),
               [Input('mal_toggle_switch', 'value'),
                Input('interval', 'n_intervals')])
 def update_mal_bar_graph(value, interval):
+    try:
+        mal = es.get(index='mal', id=1)['_source']
+    except:
+        mal = {}
+    if len(mal) < 20:
+        domain_names = sorted(mal.keys())
+    else:
+        domain_names = sorted(mal.keys())[0:20]
+
     layout_bar = copy.deepcopy(layout)
-    layout_bar['title'] = "Top Malicious Domains Queries"
-    layout_bar['xaxis'] = {'title': 'Rank (Hover over the bars for more info)'}
+    layout_bar['title'] = "Top Benign Domains Queries"
+    layout_bar['xaxis'] = {'title': 'Rank (Hover over the bars for more info)',
+                           'tickvals': [(i + 1) for i in
+                                        range(len(domain_names))]}
     layout_bar['yaxis'] = {'title': 'Number of Requests'}
-    layout_bar['margin'] = dict(l=30, r=0, b=20, t=30),
-    layout_bar['height'] = 400
+    layout_bar['margin'] = dict(l=30, r=30, b=20, t=30),
+    layout_bar['height'] = '400'
     data = [
         dict(
             type="bar",
-            hovertext=['sdsd.com', 'asdsdsa.com', 'asdasdasdasdas.com',
-                       'dsdsds.com', 'sadsdas.com', 'adsqwe.com', 'sdaqwe.com',
-                       ],
-            x=[i + 1 for i in range(30)],
-            y=[(30 - i)*50 for i in range(30)],
+            hovertext=domain_names,
+            x=[(i + 1) for i in range(len(domain_names))],
+            y=[int(mal[i]) for i in domain_names],
         )]
     figure = dict(data=data, layout=layout_bar)
     return figure
@@ -559,24 +587,47 @@ def display_benign_graph(value):
         return {'display': 'unset'}
 
 
+@app.callback(Output('benign_dns_table', 'data'),
+              [Input('mal_toggle_switch', 'value'),
+               Input('interval', 'n_intervals')])
+def update_benign_dns_table(nclicks, value):
+    try:
+        count = es.get(index='benign', id=1)['_source']
+        data = [dict({'sl_no': j + 1, 'domain': i, 'count': count[i]})
+                for i, j in zip(sorted(count.keys()),
+                                range(len(count)))]
+    except:
+        data = []
+    return data
+
+
 @app.callback(Output('benign_bar_graph', 'figure'),
               [Input('benign_toggle_switch', 'value'),
                Input('interval', 'n_intervals')])
 def update_benign_bar_graph(value, interval):
+    try:
+        benign = es.get(index='benign', id=1)['_source']
+    except:
+        benign = {}
+    if len(benign) < 20:
+        domain_names = sorted(benign.keys())
+    else:
+        domain_names = sorted(benign.keys())[0:20]
+
     layout_bar = copy.deepcopy(layout)
-    layout_bar['title'] = "Top Malicious Domains Queries"
-    layout_bar['xaxis'] = {'title': 'Rank (Hover over the bars for more info)'}
+    layout_bar['title'] = "Top Benign Domains Queries"
+    layout_bar['xaxis'] = {'title': 'Rank (Hover over the bars for more info)',
+                           'tickvals': [(i + 1) for i in
+                                        range(len(domain_names))]}
     layout_bar['yaxis'] = {'title': 'Number of Requests'}
     layout_bar['margin'] = dict(l=30, r=30, b=20, t=30),
-    layout_bar['height'] = 400
+    layout_bar['height'] = '400'
     data = [
         dict(
             type="bar",
-            hovertext=['google.com', 'ass.com', 'sdsd.com', 'asdsdsa.com', 'asdasdasdasdas.com',
-                       'dsdsds.com', 'sadsdas.com', 'adsqwe.com', 'sdaqwe.com', 'oioi.com',
-                       ],
-            x=[i + 1 for i in range(30)],
-            y=[(30 - i)*50 for i in range(30)],
+            hovertext=domain_names,
+            x=[(i + 1) for i in range(len(domain_names))],
+            y=[int(benign[i]) for i in domain_names],
         )]
     figure = dict(data=data, layout=layout_bar)
     return figure
