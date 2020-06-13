@@ -3,6 +3,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 from datetime import datetime as dt
 import dash_table
+import dash_daq as daq
 from dash.dependencies import Input, Output, State
 import copy
 from elasticsearch import Elasticsearch
@@ -17,7 +18,7 @@ layout = dict(
     autosize=True,
     automargin=True,
     margin=dict(l=0, r=0, b=6, t=30),
-    hovermode="closest",
+    # hovermode="closest",
     plot_bgcolor="#F9F9F9",
     paper_bgcolor="#F9F9F9",
     # width=350,
@@ -30,6 +31,11 @@ layout = dict(
 )
 
 app.layout = html.Div(children=[
+    dcc.Interval(
+        id='interval',
+        interval=1 * 1000,  # in milliseconds
+        n_intervals=0
+    ),
     html.H1(children='Malicious Domain Name Analysis',
             style={
                 'textAlign': 'center',
@@ -141,7 +147,6 @@ app.layout = html.Div(children=[
                     html.Div([
                         dcc.Graph(id='pie_graph')
                     ], className="pretty_container",
-                        # style={'max-height': '50px'}
                     )
                 ],
                 className="four columns",
@@ -149,9 +154,10 @@ app.layout = html.Div(children=[
             ),
             html.Div([
                 dcc.Tabs(id='tabs-example', value='tab-1', children=[
-                    dcc.Tab([html.Div([dcc.Graph(id='freq_graph', )]), ],
-                            label='Requests Plot', value='tab-1',
-                            className='pretty_container'),
+                    dcc.Tab([
+                        html.Div([dcc.Graph(id='freq_graph', )]), ],
+                        label='Requests Plot', value='tab-1',
+                        className='pretty_container'),
                     dcc.Tab([
                         html.Div([
                             html.Br(),
@@ -195,8 +201,118 @@ app.layout = html.Div(children=[
                         ], )
                     ], label='Queries per IP Address', value='tab-2',
                         className='pretty_container', id='ip_table'),
-                    dcc.Tab([], label='Top malicious domains queried',
-                            value='tab-3', className='pretty_container'),
+                    dcc.Tab([
+                        daq.ToggleSwitch(
+                            id='mal_toggle_switch',
+                            value=False,
+                            vertical=False,
+                            labelPosition='bottom',
+                            style={'float': 'right'}
+                        ),
+                        html.Br(),
+                        html.Div([
+                            html.Br(),
+                            html.P(
+                                "Malicious Domains",
+                                style={'color': '#333',
+                                       'font-size': '18px',
+                                       'text-align': 'center'
+                                       },
+                                # className="control_label"
+                            ),
+                            html.Br(),
+                            dash_table.DataTable(
+                                id='mal_dns_table',
+                                columns=[{'id': 'sl_no', 'name': 'Sl. No.'},
+                                         {'id': 'ip', 'name': 'Domain Names'},
+                                         {'id': 'count', 'name': 'Queries'}],
+                                fixed_rows={'headers': True},
+                                data=[{'sl_no':1, 'ip':1, 'count': 1}],
+                                style_table={
+                                    'height': 360,
+                                    'overflowY': 'auto',
+                                    'backgroundColor': '#F9F9F9',
+                                    'margin-left': '10px'
+                                },
+                                style_as_list_view=True,
+                                style_cell={
+                                    'padding': '5px',
+                                    'backgroundColor': '#F9F9F9',
+                                    'whiteSpace': 'no-wrap',
+                                    'overflow': 'hidden',
+                                    'textOverflow': 'ellipsis',
+                                    'textAlign': 'center',
+                                    'font-family': 'Arial',
+                                    'color': '#333',
+                                    'fontSize': 15
+                                },
+                                style_header={
+                                    'fontWeight': 'bold'
+                                },
+                            )
+                        ], id='mal_dns_table_div'),
+                        html.Div([dcc.Graph(id='mal_bar_graph', )],
+                                 id='mal_bar_graph_div'),
+                    ],
+                        label='Malicious Domains',
+                        value='tab-3', className='pretty_container'),
+                    dcc.Tab([
+                        daq.ToggleSwitch(
+                            id='benign_toggle_switch',
+                            value=False,
+                            vertical=False,
+                            labelPosition='bottom',
+                            style={'float': 'right'}
+                        ),
+                        html.Br(),
+                        html.Div([
+                            html.Br(),
+                            html.P(
+                                "Benign Domains",
+                                style={'color': '#333',
+                                       'font-size': '18px',
+                                       'text-align': 'center'
+                                       },
+                                # className="control_label"
+                            ),
+                            html.Br(),
+                            dash_table.DataTable(
+                                id='benign_dns_table',
+                                columns=[{'id': 'sl_no', 'name': 'Sl. No.'},
+                                         {'id': 'ip', 'name': 'Domain Names'},
+                                         {'id': 'count', 'name': 'Queries'}],
+                                fixed_rows={'headers': True},
+                                style_table={
+                                    'height': 360,
+                                    'overflowY': 'auto',
+                                    'backgroundColor': '#F9F9F9',
+                                    'margin-left': '10px'
+                                },
+                                style_as_list_view=True,
+                                style_cell={
+                                    'padding': '5px',
+                                    'backgroundColor': '#F9F9F9',
+                                    'whiteSpace': 'no-wrap',
+                                    'overflow': 'hidden',
+                                    'textOverflow': 'ellipsis',
+                                    'textAlign': 'center',
+                                    'font-family': 'Arial',
+                                    'color': '#333',
+                                    'fontSize': 15
+                                },
+                                style_header={
+                                    'fontWeight': 'bold'
+                                },
+                            )
+                        ], id='benign_dns_table_div'),
+
+                        html.Div([
+                            dcc.Graph(id='benign_bar_graph', )],
+                                 id='benign_bar_graph_div'),
+
+                    ],
+                        label='Benign Domains',
+                        value='tab-4', className='pretty_container'),
 
                 ]),
 
@@ -206,19 +322,6 @@ app.layout = html.Div(children=[
         ],
         className="row flex-display",
     ),
-    dcc.Graph(
-        id='example-graph',
-        figure={
-            'data': [
-                {'x': ['google.com', 'ass.com'], 'y': [4, 5], 'type': 'bar',
-                 'name': 'SF'},
-            ],
-            'layout': {
-                'title': 'Dash Data Visualization'
-            }
-        }
-    )
-
 ])
 
 
@@ -395,6 +498,88 @@ def update_ip_table(nclicks, value):
         except:
             data = []
         return data
+
+
+@app.callback(Output('mal_dns_table_div', 'style'),
+              [Input('mal_toggle_switch', 'value')])
+def display_mal_list(value):
+    if value is False:
+        return {'display': 'none'}
+    else:
+        return {'display': 'unset'}
+
+
+@app.callback(Output('mal_bar_graph_div', 'style'),
+              [Input('mal_toggle_switch', 'value')])
+def display_mal_graph(value):
+    if value is False:
+        return {'display': 'unset'}
+    else:
+        return {'display': 'none'}
+
+
+@app.callback(Output('mal_bar_graph', 'figure'),
+              [Input('mal_toggle_switch', 'value'),
+               Input('interval', 'n_intervals')])
+def update_mal_bar_graph(value, interval):
+    layout_bar = copy.deepcopy(layout)
+    layout_bar['title'] = "Top Malicious Domains Queries"
+    layout_bar['xaxis'] = {'title': 'Rank (Hover over the bars for more info)'}
+    layout_bar['yaxis'] = {'title': 'Number of Requests'}
+    layout_bar['margin'] = dict(l=30, r=0, b=20, t=30),
+    layout_bar['height'] = 400
+    data = [
+        dict(
+            type="bar",
+            hovertext=['sdsd.com', 'asdsdsa.com', 'asdasdasdasdas.com',
+                       'dsdsds.com', 'sadsdas.com', 'adsqwe.com', 'sdaqwe.com',
+                       ],
+            x=[i + 1 for i in range(30)],
+            y=[(30 - i)*50 for i in range(30)],
+        )]
+    figure = dict(data=data, layout=layout_bar)
+    return figure
+
+
+@app.callback(Output('benign_dns_table_div', 'style'),
+              [Input('benign_toggle_switch', 'value')])
+def display_benign_list(value):
+    if value is False:
+        return {'display': 'none'}
+    else:
+        return {'display': 'unset'}
+
+
+@app.callback(Output('benign_bar_graph_div', 'style'),
+              [Input('benign_toggle_switch', 'value')])
+def display_benign_graph(value):
+    if value is True:
+        return {'display': 'none'}
+    else:
+        return {'display': 'unset'}
+
+
+@app.callback(Output('benign_bar_graph', 'figure'),
+              [Input('benign_toggle_switch', 'value'),
+               Input('interval', 'n_intervals')])
+def update_benign_bar_graph(value, interval):
+    layout_bar = copy.deepcopy(layout)
+    layout_bar['title'] = "Top Malicious Domains Queries"
+    layout_bar['xaxis'] = {'title': 'Rank (Hover over the bars for more info)'}
+    layout_bar['yaxis'] = {'title': 'Number of Requests'}
+    layout_bar['margin'] = dict(l=30, r=30, b=20, t=30),
+    layout_bar['height'] = 400
+    data = [
+        dict(
+            type="bar",
+            hovertext=['google.com', 'ass.com', 'sdsd.com', 'asdsdsa.com', 'asdasdasdasdas.com',
+                       'dsdsds.com', 'sadsdas.com', 'adsqwe.com', 'sdaqwe.com', 'oioi.com',
+                       ],
+            x=[i + 1 for i in range(30)],
+            y=[(30 - i)*50 for i in range(30)],
+        )]
+    figure = dict(data=data, layout=layout_bar)
+    return figure
 
 
 if __name__ == '__main__':
