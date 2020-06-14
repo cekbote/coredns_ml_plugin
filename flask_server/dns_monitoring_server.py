@@ -68,24 +68,51 @@ def server():
             update_body = {'doc': {domain_name: body[domain_name]}}
             es.update(index='mal', id=1, body=update_body)
 
-        if domain_name in es.indices.get('*.com'):
+        date = str(date_time.date())
+        year = str(date_time.date().year)
+        month = str(date_time.date().month)
+        day = str(date_time.date().day)
+        hour = str(date_time.time().hour)
+        minutes = str(date_time.time().minute)
+
+        if domain_name in es.indices.get('*'):
             body = es.get(index=domain_name, id=1)['_source']
-            body['ip'].append(ip)
-            body['time'].append([date_time.time().hour, date_time.time().minute, date_time.time().second])
-            body['date'].append([[date_time.date().day, date_time.date().month, date_time.date().year]])
+            if date in body.keys():
+                if hour in body[date].keys():
+                    if minutes in body[date][hour].keys():
+                        body[date][hour][minutes] += 1
+                    else:
+                        body[date][hour][minutes] = 1
+                else:
+                    body[date][hour] = {minutes: 1}
+            else:
+                body[date] = {hour: {minutes: 1}}
+
+            if year in body.keys():
+                if month in body[year].keys():
+                    if day in body[year][month].keys():
+                        body[year][month][day] += 1
+                    else:
+                        body[year][month][day] = 1
+                else:
+                    body[year][month] = {day: 1}
+            else:
+                body[year] = {month: {day: 1}}
+
             if ip in body['count'].keys():
                 body['count'][ip] += 1
             else:
                 body['count'][ip] = 1
+
             update_body = {
-                'doc': {'ip': body['ip'], 'time': body['time'], 'date': body['date'], 'count': body['count']}}
+                'doc': {date: {hour: {minutes: body[date][hour][minutes]}},
+                        year: {month: {day: body[year][month][day]}},
+                        'count': body['count']}}
             es.update(index=domain_name, id=1, body=update_body)
 
         else:
-            body = {'ip': [ip], 'time': [[date_time.time().hour, date_time.time().minute, date_time.time().second]],
-                    'date':
-                        [[date_time.date().day, date_time.date().month, date_time.date().year]], 'count': {ip: 1},
-                    'status': send}
+            body = {date: {hour: {minutes: 1}}, year: {month: {day: 1}},
+                    'count': {ip: 1}, 'status': send}
             es.index(index=domain_name, id=1, body=body)
 
         return jsonify({'p': send})
