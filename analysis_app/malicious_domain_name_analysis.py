@@ -7,6 +7,7 @@ import dash_daq as daq
 from dash.dependencies import Input, Output, State
 import copy
 from elasticsearch import Elasticsearch
+import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 
@@ -255,7 +256,7 @@ app.layout = html.Div(children=[
                         html.Div([
                             html.Br(),
                             dcc.Graph(id='mal_bar_graph', )],
-                                 id='mal_bar_graph_div'),
+                            id='mal_bar_graph_div'),
                     ],
                         label='Malicious Domains',
                         value='tab-3', className='pretty_container'),
@@ -355,15 +356,13 @@ def date_message(n_clicks, freq, start_date, end_date):
         return 'Please enter the date range'
     elif freq == 'Hour' or freq == 'Minute':
         start = int(start_date.split('-')[2])
-        end = int(start_date.split('-')[2])
+        end = int(end_date.split('-')[2])
         if (end - start) == 1:
             return 'Data from {} to {}'.format(start_date, end_date)
         else:
-            return 'For hours or minutes please two consecutive days'
+            return 'For hours or minutes please enter two consecutive days'
 
     else:
-        print(type(start_date))
-        print(start_date)
         return 'Data from {} to {}'.format(start_date, end_date)
 
 
@@ -461,31 +460,76 @@ def update_pie_graph(n_clicks, value):
 
 
 @app.callback(Output('freq_graph', 'figure'),
-              [Input('submit_input', 'n_clicks')],
-              [State('input_text', 'value'),
+              [Input('submit_input', 'n_clicks'), ],
+              [State('start_hour', 'value'),
+               State('end_hour', 'value'),
+               State('input_text', 'value'),
                State('date_range', 'start_date'),
                State('date_range', 'end_date'),
                State('requests_freq', 'value')])
-def update_line_graph(n_clicks, input_value, start_date, end_date, freq_value):
+def update_line_graph(n_clicks, start_hour, end_hour, input_value,
+                      start_date, end_date, freq_value):
     layout_count = copy.deepcopy(layout)
     layout_count['title'] = "Requests"
-    layout_count['xaxis'] = {'title': 'Requests per'}
+    if freq_value is None:
+        freq_value = ''
+    layout_count['xaxis'] = {'title': 'Requests per ' + freq_value}
     layout_count['yaxis'] = {'title': 'Number of Requests'}
     layout_count['autosize'] = True
     layout_count['margin'] = dict(l=0, r=0, b=20, t=30),
     if input_value is None or input_value == '' or start_date is None or \
             end_date is None or freq_value is None:
+        layout_count['title'] = "Requests (Please fill the entries)"
+        layout_count['xaxis'] = {'title': ''}
         data = [
             dict(
                 type="line",
                 # mode="markers",
-                x=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                y=[2, 5, 6, 10, 23, 23, 2, 1, 3, 2],
+                x=[],
+                y=[],
                 # opacity=0,
                 hoverinfo="skip",
             )]
         figure = dict(data=data, layout=layout_count)
         return figure
+    else:
+        if freq_value == 'Minute':
+            try:
+                req = es.get(index=input_value, id=1)['_source'][start_date][start_hour]
+                x = [i for i in req.keys()]
+                y = [i for i in req.values()]
+            except:
+                layout_count['title'] = "Requests (Data not found)"
+                layout_count['xaxis'] = {'title': ''}
+                x = []
+                y = []
+            data = [
+                dict(
+                    type="line",
+                    x=x,
+                    y=y,
+                )]
+            figure = dict(data=data, layout=layout_count)
+            return figure
+        elif freq_value == 'Hour':
+            try:
+                req = es.get(index=input_value, id=1)['_source'][start_date]
+                hours = [str(i) for i in range(int(start_hour), int(end_hour))]
+                x = list(set(hours) & set(req.keys()))
+                y = [np.sum(list(req[i].values())) for i in x]
+            except:
+                layout_count['title'] = "Requests (Data not found)"
+                layout_count['xaxis'] = {'title': ''}
+                x = []
+                y = []
+            data = [
+                dict(
+                    type="line",
+                    x=x,
+                    y=y,
+                )]
+            figure = dict(data=data, layout=layout_count)
+            return figure
 
 
 @app.callback(Output('ip_table_', 'data'),
@@ -497,9 +541,11 @@ def update_ip_table(nclicks, value):
     else:
         try:
             count = es.get(index=value, id=1)['_source']['count']
+            domain_names = [key for (key, value) in sorted(count.items(),
+                                                           key=lambda x: x[1],
+                                                           reverse=True)]
             data = [dict({'sl_no': j + 1, 'ip': i, 'count': count[i]})
-                    for i, j in zip(sorted(count.keys()),
-                                    range(len(count)))]
+                    for i, j in zip(domain_names, range(len(count)))]
         except:
             data = []
         return data
@@ -529,9 +575,11 @@ def display_mal_graph(value):
 def update_mal_dns_table(nclicks, value):
     try:
         count = es.get(index='mal', id=1)['_source']
+        domain_names = [key for (key, value) in sorted(count.items(),
+                                                       key=lambda x: x[1],
+                                                       reverse=True)]
         data = [dict({'sl_no': j + 1, 'domain': i, 'count': count[i]})
-                for i, j in zip(sorted(count.keys()),
-                                range(len(count)))]
+                for i, j in zip(domain_names, range(len(count)))]
     except:
         data = []
     return data
@@ -546,12 +594,16 @@ def update_mal_bar_graph(value, interval):
     except:
         mal = {}
     if len(mal) < 20:
-        domain_names = sorted(mal.keys())
+        domain_names = [key for (key, value) in sorted(mal.items(),
+                                                       key=lambda x: x[1],
+                                                       reverse=True)]
     else:
-        domain_names = sorted(mal.keys())[0:20]
+        domain_names = [key for (key, value) in sorted(mal.items(),
+                                                       key=lambda x: x[1],
+                                                       reverse=True)][0:20]
 
     layout_bar = copy.deepcopy(layout)
-    layout_bar['title'] = "Top Benign Domains Queries"
+    layout_bar['title'] = "Top Malicious Domains Queried"
     layout_bar['xaxis'] = {'title': 'Rank (Hover over the bars for more info)',
                            'tickvals': [(i + 1) for i in
                                         range(len(domain_names))]}
@@ -593,9 +645,11 @@ def display_benign_graph(value):
 def update_benign_dns_table(nclicks, value):
     try:
         count = es.get(index='benign', id=1)['_source']
+        domain_names = [key for (key, value) in sorted(count.items(),
+                                                       key=lambda x: x[1],
+                                                       reverse=True)]
         data = [dict({'sl_no': j + 1, 'domain': i, 'count': count[i]})
-                for i, j in zip(sorted(count.keys()),
-                                range(len(count)))]
+                for i, j in zip(domain_names, range(len(count)))]
     except:
         data = []
     return data
@@ -610,12 +664,16 @@ def update_benign_bar_graph(value, interval):
     except:
         benign = {}
     if len(benign) < 20:
-        domain_names = sorted(benign.keys())
+        domain_names = [key for (key, value) in sorted(benign.items(),
+                                                       key=lambda x: x[1],
+                                                       reverse=True)]
     else:
-        domain_names = sorted(benign.keys())[0:20]
+        domain_names = [key for (key, value) in sorted(benign.items(),
+                                                       key=lambda x: x[1],
+                                                       reverse=True)][0:20]
 
     layout_bar = copy.deepcopy(layout)
-    layout_bar['title'] = "Top Benign Domains Queries"
+    layout_bar['title'] = "Top Benign Domains Queried"
     layout_bar['xaxis'] = {'title': 'Rank (Hover over the bars for more info)',
                            'tickvals': [(i + 1) for i in
                                         range(len(domain_names))]}
