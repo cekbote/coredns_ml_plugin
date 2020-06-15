@@ -35,7 +35,7 @@ func (p Mlplugin) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg
         data, _ := ioutil.ReadAll(response.Body)
             prob, _ := strconv.ParseFloat(string(strings.Split(strings.Split(string(data), ":")[1], "\"")[1]), 8)
 	    if prob < 0.5 {
-	            fmt.Printf("Safe Domain: %s | Probability: %f\n", qname, (1 - prob))
+	            fmt.Printf("Benign Domain: %s | Probability: %f\n", qname, (1 - prob))
 	    } else {
 	            fmt.Printf("Malicious Domain: %s | Probability: %f\n", qname, prob)
 	    }
