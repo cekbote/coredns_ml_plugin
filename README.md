@@ -53,7 +53,7 @@ trained on the entirety of both the datasets.
 
 __Learning Process__
 
-__Data Preprocessing:__ Each domain name is converted into a unicode code point 
+Data Preprocessing: Each domain name is converted into a unicode code point 
 representation and then extended to a numpy array of a length 256. The dataset 
 was created by combining the malicious domains as well as the non-malicious. 
 The dataset was split as follows:
@@ -61,7 +61,7 @@ The dataset was split as follows:
 - Validation Set: 10 % of the dataset
 - Test Set: 10% of the dataset
 
-__Training:__ The deep-learning model is a Convolutional Neural Net that is 
+Training: The deep-learning model is a Convolutional Neural Net that is 
 trained using stochastic gradient descent with the Adam optimizer.
 
 ## Implementation
@@ -163,7 +163,7 @@ To analyse and visualize the results stored in the in the Elasticsearch
 database, a Dash Application was created. A small demo of the application can be
 seen below:
 
-![image info]('./readme_assets/dash_app_gif.gif')
+![image info](./readme_assets/dash_app_gif.gif)
 
 The application has three main uses:
 
@@ -198,7 +198,7 @@ Elasticsearch server has to run in the background.
 As there are various components to the machine learning pipeline, each component
 has its own testing harness. 
 
-#### CoreDNS Test Harness
+### CoreDNS Test Harness
 
 To test whether CoreDNS works properly, make the following change to the 
 Corefile:
@@ -214,7 +214,7 @@ Then 'cd' into the `coredns` directory and enter `./coredns` in the command line
 Open a new terminal and then enter `dig @127.0.0.1 -p 1053 www.example.com`. If a 
 reply is recived CoreDNS is working properly.
 
-#### Elasticsearch Test Harness
+### Elasticsearch Test Harness
 
 To test whether Elasticsearch works properly, first run Elasticsearch by going 
 into the Elasticsearch directory and then enter `bin/elasticsearch` in the 
@@ -230,7 +230,7 @@ python
 If Python doesn't throw any error and returns a JSON object, Elasticsearch is 
 working well.
 
-#### Machine Learning Plugin and Flask Server Test Harness
+### Machine Learning Plugin and Flask Server Test Harness
 
 To test whether the machine learning plugin as well as the Flask server works 
 properly first run CoreDNS with the machine learning plugin at a particular 
@@ -243,7 +243,7 @@ Probability: [probability_value]` or `Malicous Domain: [domain_name] |
 Probability: [probability_value]` then both the machine learning plugin and the
 Flask server are working well. 
 
-#### Dash Application Test Harness
+### Dash Application Test Harness
 
 The Dash application has an in built debugger that throws errors if anything
 goes wrong. If there are no errors thrown by the debugger, the application is 
