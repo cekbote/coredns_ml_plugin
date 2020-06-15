@@ -27,6 +27,8 @@ This project combines the deep learning capabilities that the Python ecosystem
 provides by creating a Python Middleware. The plugin intercepts a request 
 and forwards it to Python middleware for further processing. 
 
+![image info](./readme_assets/ml_plugin_approach.png)
+
 The middleware is a Python Flask Server that receives the request along with 
 other metadata. The Flask Server infers whether the request was malicious or 
 benign via a pre-trained TensorFlow model and then stores the result along with
@@ -75,7 +77,6 @@ and 1. If the output value is less than 0.5 the domain name is considered benign
 
 The model summary can be found below:
 
-<center>
 
 | Layer      | Output Shape          | Activation   | Number of Parameters |
 |:----------:|:---------------------:|:------------:|:--------------------:|
@@ -89,8 +90,6 @@ The model summary can be found below:
 | Dense      | (None, 8 )            | Relu         |264                   |
 | Dense      | (None, 1 )            | Sigmoid      |9                     |
 
-</center>
-
 #### TensorFlow Model Visualization
 
 The model can be visualized as follows: 
@@ -101,13 +100,9 @@ The model can be visualized as follows:
 
 The accuracy for the Train Set, Validation Set and Test Set is as follows:
 
-<center>
-
 | Metric   | Train Set   | Validation Set | Test Set |  
 |----------|-------------|----------------|----------|
 | Accuracy | 99.25 %     | 98.00 %        | 98.00 %  |
-
-</center>
 
 For more information, the model training procedure as well as the saved model 
 can be found in this 
@@ -150,7 +145,17 @@ TODO
 
 ### Visualization Dashboard
 
-TODO
+To analyse and visualize the results stored in the in the Elasticsearch 
+database, a Dash Application was created. A small demo of the application can be
+seen below:
+
+![image info](./readme_assets/dash_app_gif.gif)
+
+
+The Dash App has three main uses:
+- __Domain Name Analysis__: 
+
+ 
 
 #### Data Repository 
 
