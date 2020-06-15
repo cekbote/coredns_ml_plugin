@@ -177,6 +177,11 @@ particular domain name, the nature of the domain name (benign or malicious) and
 also the IP addresses that have queried that particular domain name. This allows
 the user to have a domain specific analysis.
 
+
+<p align = "center">
+  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/domain_name_app_1.PNG" width="700"/> 
+</p>
+
 - __Analysis of Malicious Domain Names:__ The application allows the user to
 visualize the top 20 malicious domains queried as a bar graph. It also displays 
 a list of all the malicious domains queried which can be seen via a toggle
@@ -185,8 +190,8 @@ the malicious domain names queried and also helps in identifying model
 misclassification.
 
 <p float="left" align = "center">
-  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/malicious_app_1.PNG" width="420"/>
-  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/malicious_app_2.PNG" width="420"/>
+  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/malicious_app_1.PNG" width="400"/>
+  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/malicious_app_2.PNG" width="400"/>
 </p>
 
 - __Analysis of Benign Domain Names Graph:__ The application allows the user to
