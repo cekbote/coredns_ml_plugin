@@ -88,6 +88,8 @@ Corefile as shown below:
 }
 ```
 
+---
+
 ### Application Middleware with Flask
 
 The middleware is a Python Flask Server that contains the pre-trained 
@@ -114,6 +116,8 @@ Elasticsearch server.
  
 To run the Flask Server, `cd` into the `flask_server` directory and then enter
 `python dns_monitoring_server.py` in the command line. 
+
+---
 
 ### TensorFlow Model
 
@@ -156,6 +160,8 @@ The accuracy for the Train Set, Validation Set and Test Set is as follows:
 For more information, the model training procedure as well as the saved model 
 can be found in this 
 [repository](https://github.com/Chanakya-Ekbote/dns_alert_model).
+
+---
 
 ### Visualization Dashboard
 
