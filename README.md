@@ -1,13 +1,13 @@
 # CoreDNS Machine Learning Plugin
 
-This CoreDNS plugin connects CoreDNS server to Machine Learning Environment for
-DNS request and response analysis, monitoring and alerting. 
+This CoreDNS plugin connects the CoreDNS server to a Machine Learning 
+Environment for DNS request and response analysis, monitoring and alerting. 
 
 ## Overview 
 
 This plugin is the result of my work on a project during GSoC 2020. The goal of 
 the project was introducing the integration of machine learning capabilities
-into CoreDNS server functions.
+with the CoreDNS server.
 
 The initial use case was the identification of the DNS requests for the records
 of the domains that could be used by malicious hackers and other computer 
@@ -62,15 +62,15 @@ The dataset was split as follows:
 - Test Set: 10% of the dataset
 
 Training: The deep-learning model is a Convolutional Neural Net that is 
-trained using stochastic gradient descent with the Adam optimizer.
+trained using batch gradient descent with the Adam optimizer.
 
 ## Implementation
 
 ### Machine Learning Plugin and CoreDNS Build
 
 The machine learning plugin is a CoreDNS plugin that forwards requests to the 
-Flask Server via HTTP POST requests. Once the Flask server process the request,
-it sends the prediction whether the domain name is malicious or benign back to 
+Flask Server via HTTP POST requests. Once the Flask server processes the request,
+it sends the prediction, whether the domain name is malicious or benign, back to 
 the plugin. Depending on the nature of the domain name, the plugin can be 
 configured to allow the request to fall through to the other plugins or send the
 request to a honeypot or a blackhole.
@@ -94,8 +94,8 @@ Corefile as shown below:
 
 The middleware is a Python Flask Server that contains the pre-trained 
 Convolutional Neural Network. The Flask Server receives the domain name queried 
-as well as the IP address of the machine used to query that particular domain as
-a JSON message via HTTP POST requests from the plugin.  
+as well as the IP address of the machine used to query that particular domain 
+name, as a JSON message, via HTTP POST requests from the plugin.  
 
 Once the Flask Server receives the domain name and the IP address, the domain 
 name is preprocessed and then passed to the pre-trained deep learning model. The
@@ -157,8 +157,7 @@ The accuracy for the Train Set, Validation Set and Test Set is as follows:
 |----------|-------------|----------------|----------|
 | Accuracy | 99.25 %     | 98.00 %        | 98.00 %  |
 
-For more information, the model training procedure as well as the saved model 
-can be found in this 
+The model training procedure as well as the saved model can be found in this 
 [repository](https://github.com/Chanakya-Ekbote/dns_alert_model).
 
 ---
@@ -166,22 +165,22 @@ can be found in this
 ### Visualization Dashboard
 
 To analyse and visualize the results stored in the in the Elasticsearch 
-database, a Dash Application was created. A small demo of the application can be
-seen below:
+database, a Dash Application was created. A demo of the application can be seen 
+below:
 
 <p align = "center">
     <img style="float: right;" src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/dash_app_gif.gif">
 </p>
 
-The application has three main uses:
+The application has three main use cases:
 
 - __Domain Name Analysis:__ The application allows the user to search for a
-a particular domain name along with a time range. The application will then
-search for that particular domain name in the Elasticsearch database. Once the 
+a particular domain name along with a request time range. The application will 
+then search for that particular domain name in the Elasticsearch database. Once the 
 domain name is found, the app will display the number of requests to that 
-particular domain name, the nature of the domain name (benign or malicious) and
-also the IP addresses that have queried that particular domain name. This allows
-the user to have a domain specific analysis.
+particular domain name in that time range, the nature of the domain name 
+(benign or malicious) and also the IP addresses that have queried that 
+particular domain name. This allows for a domain specific analysis.
 
 
 <p align = "center">
@@ -189,7 +188,7 @@ the user to have a domain specific analysis.
 </p>
 
 - __Analysis of Malicious Domain Names:__ The application allows the user to
-visualize the top 20 malicious domains queried as a bar graph. It also displays 
+visualize the top 20 malicious domains queried, as a bar graph. It also displays 
 a list of all the malicious domains queried which can be seen via a toggle
 switch in the same window. This allows the user to gain a general picture of all
 the malicious domain names queried and also helps in identifying model 
@@ -200,8 +199,8 @@ misclassification.
   <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/malicious_app_2.PNG" width="400"/>
 </p>
 
-- __Analysis of Benign Domain Names Graph:__ The application allows the user to
-visualize the top 20 benign domains queried as a bar graph. It also displays 
+- __Analysis of Benign Domain Names:__ The application allows the user to
+visualize the top 20 benign domains queried, as a bar graph. It also displays 
 a list of all the benign domains queried which can be seen via a toggle
 switch in the same window. This allows the user to gain a general picture of all
 the benign domain names queried and also helps in identifying model 
@@ -213,8 +212,8 @@ misclassification.
 </p>
 
 To run the Dash application `cd` into the `analysis_app` directory and then
-enter`python malicious_domain_name_analysis.py`. Please note that the 
-Elasticsearch server has to run in the background.
+enter`python malicious_domain_name_analysis.py` in the command line. Please note
+that the Elasticsearch server has to run in the background.
 
 ___
 
@@ -237,13 +236,13 @@ Corefile:
 Then 'cd' into the `coredns` directory and enter `./coredns` in the command line.
 
 Open a new terminal and then enter `dig @127.0.0.1 -p 1053 www.example.com`. If a 
-reply is recived CoreDNS is working properly.
+reply is received CoreDNS is working properly.
 
 #### Elasticsearch Test Harness
 
 To test whether Elasticsearch works properly, first run Elasticsearch by going 
 into the Elasticsearch directory and then enter `bin/elasticsearch` in the 
-command line. Next enter the following into the command line:
+command line. Next enter the following into a new terminal:
 
 ```
 python
@@ -252,14 +251,14 @@ python
 >>> es.indices.get('*')
 ``` 
 
-If Python doesn't throw any error and returns a JSON object, Elasticsearch is 
+If Python doesn't throw any errors and returns a JSON object, Elasticsearch is 
 working well.
 
 #### Machine Learning Plugin and Flask Server Test Harness
 
 To test whether the machine learning plugin as well as the Flask server works 
 properly first run CoreDNS with the machine learning plugin at a particular 
-port, run Elasticsearch and the Flask Server.
+port, run Elasticsearch and run the Flask Server.
 
 Next open a new terminal and enter `dig @127.0.0.1 - p port_number 
 www.google.com`. Then open the terminal where the CoreDNS server is running and
@@ -272,7 +271,7 @@ Flask server are working well.
 
 The Dash application has an in built debugger that throws errors if anything
 goes wrong. If there are no errors thrown by the debugger, the application is 
-working well
+working well.
 
 
 
