@@ -189,9 +189,11 @@ switch in the same window. This allows the user to gain a general picture of all
 the benign domain names queried and also helps in identifying model 
 misclassification.
 
-To the run the Dash application `cd` into the `analysis_app` directory and then
-use `python malicious_domain_name_analysis.py`. Please note that the 
+To run the Dash application `cd` into the `analysis_app` directory and then
+enter`python malicious_domain_name_analysis.py`. Please note that the 
 Elasticsearch server has to run in the background.
+
+___
 
 ### Testing Harness
 
