@@ -163,7 +163,9 @@ To analyse and visualize the results stored in the in the Elasticsearch
 database, a Dash Application was created. A small demo of the application can be
 seen below:
 
-![image info](./readme_assets/dash_app_gif.gif)
+<p align = "center">
+    <img style="float: right;" src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/dash_app_gif.gif">
+</p>
 
 The application has three main uses:
 
@@ -175,6 +177,10 @@ particular domain name, the nature of the domain name (benign or malicious) and
 also the IP addresses that have queried that particular domain name. This allows
 the user to have a domain specific analysis.
 
+<p float="left" align = "center">
+  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/domain_name_app_1.PNG" width="900/> 
+</p>
+
 - __Analysis of Malicious Domain Names:__ The application allows the user to
 visualize the top 20 malicious domains queried as a bar graph. It also displays 
 a list of all the malicious domains queried which can be seen via a toggle
@@ -182,12 +188,22 @@ switch in the same window. This allows the user to gain a general picture of all
 the malicious domain names queried and also helps in identifying model 
 misclassification.
 
+<p float="left" align = "center">
+  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/malicious_app_1.PNG" width="450"/>
+  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/malicious_app_2.PNG" width="450"/>
+</p>
+
 - __Analysis of Benign Domain Names Graph:__ The application allows the user to
 visualize the top 20 benign domains queried as a bar graph. It also displays 
 a list of all the benign domains queried which can be seen via a toggle
 switch in the same window. This allows the user to gain a general picture of all
 the benign domain names queried and also helps in identifying model 
 misclassification.
+
+<p float="left" align = "center">
+  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/benign_app_1.PNG" width="450"/>
+  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/benign_app_2.PNG" width="450"/>
+</p>
 
 To run the Dash application `cd` into the `analysis_app` directory and then
 enter`python malicious_domain_name_analysis.py`. Please note that the 
