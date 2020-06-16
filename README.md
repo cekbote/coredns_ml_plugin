@@ -157,8 +157,8 @@ The accuracy for the Train Set, Validation Set and Test Set is as follows:
 |----------|-------------|----------------|----------|
 | Accuracy | 99.25 %     | 98.00 %        | 98.00 %  |
 
-The model training procedure as well as the saved model can be found in this 
-[repository](https://github.com/Chanakya-Ekbote/dns_alert_model).
+The model training procedure as well as the pre-trained model can be found in 
+the tensorflow_model directory. 
 
 ---
 
