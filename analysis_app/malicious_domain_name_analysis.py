@@ -63,14 +63,13 @@ app.layout = html.Div(children=[
                         ]),
                         html.Div(id='input_message', className="control_label"),
                         html.P("Enter the date range for the analysis:",
-                               style={'color': '#2e86c1', 'font-size': '18px',
-                                      'border': '0px'},
+                               style={'color': '#2e86c1', 'font-size': '18px', },
                                className="control_label"),
                         dcc.DatePickerRange(
                             id='date_range',
                             min_date_allowed=dt(2020, 1, 5),
                             className="dcc_control",
-                            style={'borderWidth': '0px'},
+                            style={'borderWidth': '0px', 'padding': '0px'},
                         ),
                         html.Div(id='date_message', className="control_label",
                                  style={'margin-bottom': '10px'}),
@@ -361,7 +360,13 @@ def date_message(n_clicks, freq, start_date, end_date):
             return 'Data from {} to {}'.format(start_date, end_date)
         else:
             return 'For hours or minutes please enter two consecutive days'
-
+    elif freq == 'Day':
+        start = int(start_date.split('-')[1])
+        end = int(end_date.split('-')[1])
+        if (end - start) == 0:
+            return 'Data from {} to {}'.format(start_date, end_date)
+        else:
+            return 'For days please enter a range within the same month'
     else:
         return 'Data from {} to {}'.format(start_date, end_date)
 
@@ -473,7 +478,7 @@ def update_line_graph(n_clicks, start_hour, end_hour, input_value,
     layout_count['title'] = "Requests"
     if freq_value is None:
         freq_value = ''
-    layout_count['xaxis'] = {'title': 'Requests per ' + freq_value}
+    layout_count['xaxis'] = {'title': 'Time in ' + freq_value + 's'}
     layout_count['yaxis'] = {'title': 'Number of Requests'}
     layout_count['autosize'] = True
     layout_count['margin'] = dict(l=0, r=0, b=20, t=30),
@@ -517,6 +522,38 @@ def update_line_graph(n_clicks, start_hour, end_hour, input_value,
                 hours = [str(i) for i in range(int(start_hour), int(end_hour))]
                 x = list(set(hours) & set(req.keys()))
                 y = [np.sum(list(req[i].values())) for i in x]
+            except:
+                layout_count['title'] = "Requests (Data not found)"
+                layout_count['xaxis'] = {'title': ''}
+                x = []
+                y = []
+            data = [
+                dict(
+                    type="line",
+                    x=x,
+                    y=y,
+                )]
+            figure = dict(data=data, layout=layout_count)
+            return figure
+        elif freq_value == 'Day':
+            start = start_date.split('-')
+            start[1], start[2] = start[1].lstrip('0'), start[2].lstrip('0')
+            end = end_date.split('-')
+            end[1], end[2] = end[1].lstrip('0'), end[2].lstrip('0')
+
+            try:
+                req = es.get(index=input_value, id=1)['_source']
+                req = req[start[0]][start[1]]
+                print(req)
+                if (int(end[1]) - int(start[1])) == 0:
+                    days = [str(i) for i in range(int(start[2]),
+                                                  (int(end[2]) + 1))]
+
+                    x = list(set(days) & set(req.keys()))
+                    y = [req[i] for i in x]
+                else:
+                    x = [i for i in req.keys()]
+                    y = [req[i] for i in x]
             except:
                 layout_count['title'] = "Requests (Data not found)"
                 layout_count['xaxis'] = {'title': ''}
