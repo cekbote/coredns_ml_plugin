@@ -54,17 +54,21 @@ def server():
         if float(send) < 0.5:
             body = es.get(index='benign', id=1)['_source']
             if domain_name in body.keys():
-                body[domain_name] += 1
+                body[domain_name]['count'] += 1
             else:
-                body[domain_name] = 1
+                body[domain_name] = {}
+                body[domain_name]['count'] = 1
+                body[domain_name]['status'] = float(send)
             update_body = {'doc': {domain_name: body[domain_name]}}
             es.update(index='benign', id=1, body=update_body)
         else:
             body = es.get(index='mal', id=1)['_source']
             if domain_name in body.keys():
-                body[domain_name] += 1
+                body[domain_name]['count'] += 1
             else:
-                body[domain_name] = 1
+                body[domain_name] = {}
+                body[domain_name]['count'] = 1
+                body[domain_name]['status'] = float(send)
             update_body = {'doc': {domain_name: body[domain_name]}}
             es.update(index='mal', id=1, body=update_body)
 

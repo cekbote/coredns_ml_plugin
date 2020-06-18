@@ -226,6 +226,7 @@ app.layout = html.Div(children=[
                                 columns=[{'id': 'sl_no', 'name': 'Sl. No.'},
                                          {'id': 'domain',
                                           'name': 'Domain Names'},
+                                         {'id': 'acc', 'name': 'Accuracy'},
                                          {'id': 'count', 'name': 'Queries'}],
                                 fixed_rows={'headers': True},
                                 data=[{'sl_no': 1, 'ip': 1, 'count': 1}],
@@ -284,6 +285,7 @@ app.layout = html.Div(children=[
                                 columns=[{'id': 'sl_no', 'name': 'Sl. No.'},
                                          {'id': 'domain',
                                           'name': 'Domain Names'},
+                                         {'id': 'acc', 'name': 'Accuracy'},
                                          {'id': 'count', 'name': 'Queries'}],
                                 fixed_rows={'headers': True},
                                 style_table={
