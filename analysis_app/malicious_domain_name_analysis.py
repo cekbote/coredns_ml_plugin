@@ -308,6 +308,16 @@ app.layout = html.Div(children=[
                                     'fontSize': 15,
                                     'maxWidth': 0
                                 },
+                                style_data_conditional=[
+                                    {
+                                        'if': {
+                                            'filter_query': '{count} < 10',
+                                            'column_id': 'count'
+                                        },
+                                        'backgroundColor': '#B10DC9',
+                                        'color': 'white'
+                                    }
+                                ],
                                 style_header={
                                     'fontWeight': 'bold'
                                 },
