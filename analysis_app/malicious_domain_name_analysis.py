@@ -246,7 +246,8 @@ app.layout = html.Div(children=[
                                     'textAlign': 'center',
                                     'font-family': 'Arial',
                                     'color': '#333',
-                                    'fontSize': 15
+                                    'fontSize': 15,
+                                    'maxWidth': 0
                                 },
                                 style_header={
                                     'fontWeight': 'bold'
@@ -304,7 +305,8 @@ app.layout = html.Div(children=[
                                     'textAlign': 'center',
                                     'font-family': 'Arial',
                                     'color': '#333',
-                                    'fontSize': 15
+                                    'fontSize': 15,
+                                    'maxWidth': 0
                                 },
                                 style_header={
                                     'fontWeight': 'bold'
@@ -613,12 +615,13 @@ def display_mal_graph(value):
                Input('interval', 'n_intervals')])
 def update_mal_dns_table(nclicks, value):
     try:
-        count = es.get(index='mal', id=1)['_source']
-        domain_names = [key for (key, value) in sorted(count.items(),
-                                                       key=lambda x: x[1],
-                                                       reverse=True)]
-        data = [dict({'sl_no': j + 1, 'domain': i, 'count': count[i]})
-                for i, j in zip(domain_names, range(len(count)))]
+        mal = es.get(index='mal', id=1)['_source']
+        domain_names = [key for (key, value) in
+                        sorted(mal.items(), key=lambda x: x[1]['count'],
+                               reverse=True)]
+        data = [dict({'sl_no': j + 1, 'domain': i,
+                      'acc': mal[i]['status'], 'count': mal[i]['count']})
+                for i, j in zip(domain_names, range(len(mal)))]
     except:
         data = []
     return data
@@ -633,13 +636,13 @@ def update_mal_bar_graph(value, interval):
     except:
         mal = {}
     if len(mal) < 20:
-        domain_names = [key for (key, value) in sorted(mal.items(),
-                                                       key=lambda x: x[1],
-                                                       reverse=True)]
+        domain_names = [key for (key, value) in
+                        sorted(mal.items(), key=lambda x: x[1]['count'],
+                               reverse=True)]
     else:
-        domain_names = [key for (key, value) in sorted(mal.items(),
-                                                       key=lambda x: x[1],
-                                                       reverse=True)][0:20]
+        domain_names = [key for (key, value) in
+                        sorted(mal.items(), key=lambda x: x[1]['count'],
+                               reverse=True)][0:20]
 
     layout_bar = copy.deepcopy(layout)
     layout_bar['title'] = "Top Malicious Domains Queried"
@@ -654,7 +657,7 @@ def update_mal_bar_graph(value, interval):
             type="bar",
             hovertext=domain_names,
             x=[(i + 1) for i in range(len(domain_names))],
-            y=[int(mal[i]) for i in domain_names],
+            y=[int(mal[i]['count']) for i in domain_names],
         )]
     figure = dict(data=data, layout=layout_bar)
     return figure
@@ -683,12 +686,13 @@ def display_benign_graph(value):
                Input('interval', 'n_intervals')])
 def update_benign_dns_table(nclicks, value):
     try:
-        count = es.get(index='benign', id=1)['_source']
-        domain_names = [key for (key, value) in sorted(count.items(),
-                                                       key=lambda x: x[1],
-                                                       reverse=True)]
-        data = [dict({'sl_no': j + 1, 'domain': i, 'count': count[i]})
-                for i, j in zip(domain_names, range(len(count)))]
+        benign = es.get(index='benign', id=1)['_source']
+        domain_names = [key for (key, value) in
+                        sorted(benign.items(), key=lambda x: x[1]['count'],
+                               reverse=True)]
+        data = [dict({'sl_no': j + 1, 'domain': i,
+                      'acc': benign[i]['status'], 'count': benign[i]['count']})
+                for i, j in zip(domain_names, range(len(benign)))]
     except:
         data = []
     return data
@@ -703,13 +707,13 @@ def update_benign_bar_graph(value, interval):
     except:
         benign = {}
     if len(benign) < 20:
-        domain_names = [key for (key, value) in sorted(benign.items(),
-                                                       key=lambda x: x[1],
-                                                       reverse=True)]
+        domain_names = [key for (key, value) in
+                        sorted(benign.items(), key=lambda x: x[1]['count'],
+                               reverse=True)]
     else:
-        domain_names = [key for (key, value) in sorted(benign.items(),
-                                                       key=lambda x: x[1],
-                                                       reverse=True)][0:20]
+        domain_names = [key for (key, value) in
+                        sorted(benign.items(), key=lambda x: x[1]['count'],
+                               reverse=True)][0:20]
 
     layout_bar = copy.deepcopy(layout)
     layout_bar['title'] = "Top Benign Domains Queried"
@@ -724,7 +728,7 @@ def update_benign_bar_graph(value, interval):
             type="bar",
             hovertext=domain_names,
             x=[(i + 1) for i in range(len(domain_names))],
-            y=[int(benign[i]) for i in domain_names],
+            y=[int(benign[i]['count']) for i in domain_names],
         )]
     figure = dict(data=data, layout=layout_bar)
     return figure
