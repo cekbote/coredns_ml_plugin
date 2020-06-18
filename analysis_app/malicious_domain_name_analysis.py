@@ -226,7 +226,7 @@ app.layout = html.Div(children=[
                                 columns=[{'id': 'sl_no', 'name': 'Sl. No.'},
                                          {'id': 'domain',
                                           'name': 'Domain Names'},
-                                         {'id': 'acc', 'name': 'Accuracy'},
+                                         {'id': 'acc', 'name': 'Accuracy %'},
                                          {'id': 'count', 'name': 'Queries'}],
                                 fixed_rows={'headers': True},
                                 data=[{'sl_no': 1, 'ip': 1, 'count': 1}],
@@ -249,6 +249,16 @@ app.layout = html.Div(children=[
                                     'fontSize': 15,
                                     'maxWidth': 0
                                 },
+                                style_data_conditional=[
+                                    {
+                                        'if': {
+                                            'filter_query': '{acc} < 95',
+                                            'column_id': i
+                                        },
+                                        'backgroundColor': '#f8b0a8',
+                                    } for i in ['sl_no', 'domain', 'acc',
+                                                'count']
+                                ],
                                 style_header={
                                     'fontWeight': 'bold'
                                 },
@@ -286,7 +296,7 @@ app.layout = html.Div(children=[
                                 columns=[{'id': 'sl_no', 'name': 'Sl. No.'},
                                          {'id': 'domain',
                                           'name': 'Domain Names'},
-                                         {'id': 'acc', 'name': 'Accuracy'},
+                                         {'id': 'acc', 'name': 'Accuracy %'},
                                          {'id': 'count', 'name': 'Queries'}],
                                 fixed_rows={'headers': True},
                                 style_table={
@@ -311,12 +321,12 @@ app.layout = html.Div(children=[
                                 style_data_conditional=[
                                     {
                                         'if': {
-                                            'filter_query': '{count} < 10',
-                                            'column_id': 'count'
+                                            'filter_query': '{acc} < 95',
+                                            'column_id': i
                                         },
-                                        'backgroundColor': '#B10DC9',
-                                        'color': 'white'
-                                    }
+                                        'backgroundColor': '#f8b0a8',
+                                    } for i in ['sl_no', 'domain', 'acc',
+                                                'count']
                                 ],
                                 style_header={
                                     'fontWeight': 'bold'
