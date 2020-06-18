@@ -58,7 +58,8 @@ def server():
             else:
                 body[domain_name] = {}
                 body[domain_name]['count'] = 1
-                body[domain_name]['status'] = str(1-float(send)*100) + ' %'
+                body[domain_name]['status'] = str(format(((1-float(send))*100),
+                                                  '.2f')) + ' %'
             update_body = {'doc': {domain_name: body[domain_name]}}
             es.update(index='benign', id=1, body=update_body)
         else:
@@ -68,7 +69,8 @@ def server():
             else:
                 body[domain_name] = {}
                 body[domain_name]['count'] = 1
-                body[domain_name]['status'] = str(float(send)*100) + ' %'
+                body[domain_name]['status'] = str(format(float(send)*100,
+                                                         '.2f')) + ' %'
             update_body = {'doc': {domain_name: body[domain_name]}}
             es.update(index='mal', id=1, body=update_body)
 
