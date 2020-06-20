@@ -1,6 +1,6 @@
 # CoreDNS Machine Learning Plugin
 
-https://img.shields.io/github/license/cekbote/coredns_ml_plugin?style=flat-square
+[![License](https://img.shields.io/github/license/cekbote/coredns_ml_plugin?style=flat-square)
 
 This CoreDNS plugin connects the CoreDNS server to a Machine Learning 
 Environment for DNS request and response analysis, monitoring and alerting. 
