@@ -42,7 +42,7 @@ app.layout = html.Div(children=[
                 'textAlign': 'center',
                 'color': '#2e86c1'
             }),
-    dcc.Tabs(id="", value='not_vetted_tab', children=[
+    dcc.Tabs(id="", value='historical_analysis', children=[
         dcc.Tab([
             html.Div(
                 [
@@ -75,7 +75,9 @@ app.layout = html.Div(children=[
                                     min_date_allowed=dt(2020, 1, 5),
                                     className="dcc_control",
                                     style={'borderWidth': '0px',
-                                           'padding': '0px'},
+                                           'padding': '0px',
+                                           'float': 'center',
+                                           'margin-left': '10px'},
                                 ),
                                 html.Div(id='date_message',
                                          className="control_label",
@@ -97,7 +99,8 @@ app.layout = html.Div(children=[
                                                 {"label": "Minute ",
                                                  "value": "Minute"},
                                             ],
-                                            labelStyle={"display": "inline-block"},
+                                            labelStyle={"display":
+                                                            "inline-block"},
                                             style={'color': '#2e86c1'},
                                             className="dcc_control",
                                         ),
@@ -141,15 +144,22 @@ app.layout = html.Div(children=[
                                              style={'margin-bottom': '10px'}),
                                     html.Div([html.P("Submit the Queries:",
                                                      style={'display': 'inline',
-                                                            'color': '#2e86c1',
-                                                            'font-size': '18px'},
-                                                     className="control_label", ),
+                                                            'color':
+                                                                '#2e86c1',
+                                                            'font-size':
+                                                                '18px'},
+                                                     className="control_label",
+                                                     ),
                                               html.Button('Submit',
                                                           id='submit_input',
                                                           n_clicks=0,
-                                                          style={'float': 'center',
-                                                                 'margin-left': '30px',
-                                                                 'color': '#2e86c1'}, ),
+                                                          style={'float':
+                                                                     'center',
+                                                                 'margin-left':
+                                                                     '30px',
+                                                                 'color':
+                                                                     '#2e86c1'},
+                                                          ),
                                               ], ),
                                 ]),
                             ], className='pretty_container'),
@@ -397,6 +407,8 @@ app.layout = html.Div(children=[
                                                   'name': 'Sl. No.'},
                                                  {'id': 'domain',
                                                   'name': 'Domain Name'},
+                                                 {'id': 'class',
+                                                  'name': 'Classification'},
                                                  {'id': 'acc',
                                                   'name': 'Accuracy %'},
                                                  {'id': 'count',
@@ -427,7 +439,7 @@ app.layout = html.Div(children=[
                                     )
                                 ], )
                             ], label='Not Vetted', value='not_vetted_tab',
-                            className='pretty_container'),
+                                className='pretty_container'),
                             dcc.Tab([
                                 html.Div([
                                     html.Br(),
@@ -446,6 +458,8 @@ app.layout = html.Div(children=[
                                                   'name': 'Sl. No.'},
                                                  {'id': 'domain',
                                                   'name': 'Domain Name'},
+                                                 {'id': 'class',
+                                                  'name': 'Classification'},
                                                  {'id': 'acc',
                                                   'name': 'Accuracy %'},
                                                  {'id': 'count',
@@ -476,7 +490,7 @@ app.layout = html.Div(children=[
                                     )
                                 ], )
                             ], label='Benign', value='benign_tab',
-                            className='pretty_container'),
+                                className='pretty_container'),
                             dcc.Tab([
                                 html.Div([
                                     html.Br(),
@@ -495,6 +509,8 @@ app.layout = html.Div(children=[
                                                   'name': 'Sl. No.'},
                                                  {'id': 'domain',
                                                   'name': 'Domain Name'},
+                                                 {'id': 'class',
+                                                  'name': 'Classification'},
                                                  {'id': 'acc',
                                                   'name': 'Accuracy %'},
                                                  {'id': 'count',
@@ -544,6 +560,8 @@ app.layout = html.Div(children=[
                                                   'name': 'Sl. No.'},
                                                  {'id': 'domain',
                                                   'name': 'Domain Name'},
+                                                 {'id': 'class',
+                                                  'name': 'Classification'},
                                                  {'id': 'acc',
                                                   'name': 'Accuracy %'},
                                                  {'id': 'count',
@@ -580,7 +598,7 @@ app.layout = html.Div(children=[
                 ),
                 html.Div([
                     html.Div([
-                        html.P("Status:",
+                        html.P("Change Status:",
                                style={'display': 'inline',
                                       'color': '#2e86c1',
                                       'font-size': '18px'},
