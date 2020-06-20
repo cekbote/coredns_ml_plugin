@@ -42,315 +42,580 @@ app.layout = html.Div(children=[
                 'textAlign': 'center',
                 'color': '#2e86c1'
             }),
-    html.Div(
-        [
+    dcc.Tabs(id="", value='not_vetted_tab', children=[
+        dcc.Tab([
             html.Div(
                 [
-                    html.Div([
-                        html.Div([
-                            html.P(
-                                "Domain Name:",
-                                style={'display': 'inline', 'color': '#2e86c1',
-                                       'font-size': '18px'},
-                                className="control_label"
-                            ),
-                            dcc.Input(
-                                placeholder='Enter a Domain Name',
-                                type='text',
-                                id='input_text',
-                                className='dcc_control'
-                            ),
-                        ]),
-                        html.Div(id='input_message', className="control_label"),
-                        html.P("Enter the date range for the analysis:",
-                               style={'color': '#2e86c1', 'font-size': '18px', },
-                               className="control_label"),
-                        dcc.DatePickerRange(
-                            id='date_range',
-                            min_date_allowed=dt(2020, 1, 5),
-                            className="dcc_control",
-                            style={'borderWidth': '0px', 'padding': '0px'},
-                        ),
-                        html.Div(id='date_message', className="control_label",
-                                 style={'margin-bottom': '10px'}),
-                        html.Div([
+                    html.Div(
+                        [
                             html.Div([
-                                html.P("Requests per:",
-                                       style={'display': 'inline',
-                                              'color': '#2e86c1',
-                                              'font-size': '18px'},
-                                       className="control_label", ),
-                                dcc.RadioItems(
-                                    id="requests_freq",
-                                    options=[
-                                        {"label": "Day ", "value": "Day"},
-                                        {"label": "Hour ", "value": "Hour"},
-                                        {"label": "Minute ", "value": "Minute"},
-                                    ],
-                                    labelStyle={"display": "inline-block"},
-                                    style={'color': '#2e86c1'},
+                                html.Div([
+                                    html.P(
+                                        "Domain Name:",
+                                        style={'display': 'inline',
+                                               'color': '#2e86c1',
+                                               'font-size': '18px'},
+                                        className="control_label"
+                                    ),
+                                    dcc.Input(
+                                        placeholder='Enter a Domain Name',
+                                        type='text',
+                                        id='input_text',
+                                        className='dcc_control'
+                                    ),
+                                ]),
+                                html.Div(id='input_message',
+                                         className="control_label"),
+                                html.P("Enter the date range for the analysis:",
+                                       style={'color': '#2e86c1',
+                                              'font-size': '18px', },
+                                       className="control_label"),
+                                dcc.DatePickerRange(
+                                    id='date_range',
+                                    min_date_allowed=dt(2020, 1, 5),
                                     className="dcc_control",
+                                    style={'borderWidth': '0px',
+                                           'padding': '0px'},
                                 ),
-                            ]),
-                            html.Div(id='radio_button_message',
-                                     className="control_label",
-                                     style={'margin-bottom': '10px'}),
+                                html.Div(id='date_message',
+                                         className="control_label",
+                                         style={'margin-bottom': '10px'}),
+                                html.Div([
+                                    html.Div([
+                                        html.P("Requests per:",
+                                               style={'display': 'inline',
+                                                      'color': '#2e86c1',
+                                                      'font-size': '18px'},
+                                               className="control_label", ),
+                                        dcc.RadioItems(
+                                            id="requests_freq",
+                                            options=[
+                                                {"label": "Day ",
+                                                 "value": "Day"},
+                                                {"label": "Hour ",
+                                                 "value": "Hour"},
+                                                {"label": "Minute ",
+                                                 "value": "Minute"},
+                                            ],
+                                            labelStyle={"display": "inline-block"},
+                                            style={'color': '#2e86c1'},
+                                            className="dcc_control",
+                                        ),
+                                    ]),
+                                    html.Div(id='radio_button_message',
+                                             className="control_label",
+                                             style={'margin-bottom': '10px'}),
+                                    html.Div([
+                                        html.P(
+                                            "Hour Range:",
+                                            style={'display': 'inline',
+                                                   'color': '#2e86c1',
+                                                   'font-size': '18px'},
+                                            className="control_label"
+                                        ),
+                                        dcc.Input(
+                                            placeholder='',
+                                            type='text',
+                                            id='start_hour',
+                                            className='dcc_control',
+                                            size='1'
+                                        ),
+                                        html.P(
+                                            "to",
+                                            style={'display': 'inline',
+                                                   'color': '#2e86c1',
+                                                   'font-size': '18px'},
+                                            className="control_label"
+                                        ),
+                                        dcc.Input(
+                                            placeholder='',
+                                            type='text',
+                                            id='end_hour',
+                                            className='dcc_control',
+                                            size='1'
+                                        ),
+
+                                    ], id='hour_range'),
+                                    html.Div(id='hour_range_message',
+                                             className="control_label",
+                                             style={'margin-bottom': '10px'}),
+                                    html.Div([html.P("Submit the Queries:",
+                                                     style={'display': 'inline',
+                                                            'color': '#2e86c1',
+                                                            'font-size': '18px'},
+                                                     className="control_label", ),
+                                              html.Button('Submit',
+                                                          id='submit_input',
+                                                          n_clicks=0,
+                                                          style={'float': 'center',
+                                                                 'margin-left': '30px',
+                                                                 'color': '#2e86c1'}, ),
+                                              ], ),
+                                ]),
+                            ], className='pretty_container'),
+
                             html.Div([
-                                html.P(
-                                    "Hour Range:",
-                                    style={'display': 'inline',
-                                           'color': '#2e86c1',
-                                           'font-size': '18px'},
-                                    className="control_label"
-                                ),
-                                dcc.Input(
-                                    placeholder='',
-                                    type='text',
-                                    id='start_hour',
-                                    className='dcc_control',
-                                    size='1'
-                                ),
-                                html.P(
-                                    "to",
-                                    style={'display': 'inline',
-                                           'color': '#2e86c1',
-                                           'font-size': '18px'},
-                                    className="control_label"
-                                ),
-                                dcc.Input(
-                                    placeholder='',
-                                    type='text',
-                                    id='end_hour',
-                                    className='dcc_control',
-                                    size='1'
-                                ),
-
-                            ], id='hour_range'),
-                            html.Div(id='hour_range_message',
-                                     className="control_label",
-                                     style={'margin-bottom': '10px'}),
-                            html.Div([html.P("Submit the Queries:",
-                                             style={'display': 'inline',
-                                                    'color': '#2e86c1',
-                                                    'font-size': '18px'},
-                                             className="control_label", ),
-                                      html.Button('Submit',
-                                                  id='submit_input',
-                                                  n_clicks=0,
-                                                  style={'float': 'center',
-                                                         'margin-left': '30px',
-                                                         'color': '#2e86c1'}, ),
-                                      ], ),
-                        ]),
-                    ], className='pretty_container'),
-
+                                dcc.Graph(id='pie_graph')
+                            ], className="pretty_container",
+                            )
+                        ],
+                        className="four columns",
+                        id="pie",
+                    ),
                     html.Div([
-                        dcc.Graph(id='pie_graph')
-                    ], className="pretty_container",
-                    )
+                        dcc.Tabs(id='tabs-example', value='tab-1', children=[
+                            dcc.Tab([
+                                html.Div([dcc.Graph(id='freq_graph', )]), ],
+                                label='Requests Plot', value='tab-1',
+                                className='pretty_container'),
+                            dcc.Tab([
+                                html.Div([
+                                    html.Br(),
+                                    html.P(
+                                        "List of IP addresses that queried the Domain",
+                                        style={'color': '#333',
+                                               'font-size': '18px',
+                                               'text-align': 'center'
+                                               },
+                                        # className="control_label"
+                                    ),
+                                    html.Br(),
+                                    dash_table.DataTable(
+                                        id='ip_table_',
+                                        columns=[{'id': 'sl_no',
+                                                  'name': 'Sl. No.'},
+                                                 {'id': 'ip',
+                                                  'name': 'IP Address'},
+                                                 {'id': 'count',
+                                                  'name': 'Queries'}],
+                                        fixed_rows={'headers': True},
+                                        style_table={
+                                            'height': 380,
+                                            'overflowY': 'auto',
+                                            'backgroundColor': '#F9F9F9',
+                                            'margin-left': '10px'
+                                        },
+                                        style_as_list_view=True,
+                                        style_cell={
+                                            'padding': '5px',
+                                            'backgroundColor': '#F9F9F9',
+                                            'whiteSpace': 'no-wrap',
+                                            'overflow': 'hidden',
+                                            'textOverflow': 'ellipsis',
+                                            'textAlign': 'center',
+                                            'font-family': 'Arial',
+                                            'color': '#333',
+                                            'fontSize': 15
+                                        },
+                                        style_header={
+                                            'fontWeight': 'bold'
+                                        },
+                                    )
+                                ], )
+                            ], label='Queries per IP Address', value='tab-2',
+                                className='pretty_container', id='ip_table'),
+                            dcc.Tab([
+                                daq.ToggleSwitch(
+                                    id='mal_toggle_switch',
+                                    value=False,
+                                    vertical=False,
+                                    labelPosition='bottom',
+                                    style={'float': 'right'}
+                                ),
+                                html.Br(),
+                                html.Div([
+                                    html.Br(),
+                                    html.P(
+                                        "Malicious Domains",
+                                        style={'color': '#333',
+                                               'font-size': '18px',
+                                               'text-align': 'center'
+                                               },
+                                        # className="control_label"
+                                    ),
+                                    html.Br(),
+                                    dash_table.DataTable(
+                                        id='mal_dns_table',
+                                        columns=[{'id': 'sl_no',
+                                                  'name': 'Sl. No.'},
+                                                 {'id': 'domain',
+                                                  'name': 'Domain Names'},
+                                                 {'id': 'acc',
+                                                  'name': 'Accuracy %'},
+                                                 {'id': 'count',
+                                                  'name': 'Queries'}],
+                                        fixed_rows={'headers': True},
+                                        data=[{'sl_no': 1, 'ip': 1, 'count': 1}],
+                                        style_table={
+                                            'height': 360,
+                                            'overflowY': 'auto',
+                                            'backgroundColor': '#F9F9F9',
+                                            'margin-left': '10px'
+                                        },
+                                        style_as_list_view=True,
+                                        style_cell={
+                                            'padding': '5px',
+                                            'backgroundColor': '#F9F9F9',
+                                            'whiteSpace': 'no-wrap',
+                                            'overflow': 'hidden',
+                                            'textOverflow': 'ellipsis',
+                                            'textAlign': 'center',
+                                            'font-family': 'Arial',
+                                            'color': '#333',
+                                            'fontSize': 15,
+                                            'maxWidth': 0
+                                        },
+                                        style_data_conditional=[
+                                            {
+                                                'if': {
+                                                    'filter_query': '{acc} < 95',
+                                                    'column_id': i
+                                                },
+                                                'backgroundColor': '#f8b0a8',
+                                            } for i in ['sl_no', 'domain', 'acc',
+                                                        'count']
+                                        ],
+                                        style_header={
+                                            'fontWeight': 'bold'
+                                        },
+                                    )
+                                ], id='mal_dns_table_div'),
+                                html.Div([
+                                    html.Br(),
+                                    dcc.Graph(id='mal_bar_graph', )],
+                                    id='mal_bar_graph_div'),
+                            ],
+                                label='Malicious Domains',
+                                value='tab-3', className='pretty_container'),
+                            dcc.Tab([
+                                daq.ToggleSwitch(
+                                    id='benign_toggle_switch',
+                                    value=False,
+                                    vertical=False,
+                                    labelPosition='bottom',
+                                    style={'float': 'right'}
+                                ),
+                                html.Br(),
+                                html.Div([
+                                    html.Br(),
+                                    html.P(
+                                        "Benign Domains",
+                                        style={'color': '#333',
+                                               'font-size': '18px',
+                                               'text-align': 'center'
+                                               },
+                                        # className="control_label"
+                                    ),
+                                    html.Br(),
+                                    dash_table.DataTable(
+                                        id='benign_dns_table',
+                                        columns=[{'id': 'sl_no',
+                                                  'name': 'Sl. No.'},
+                                                 {'id': 'domain',
+                                                  'name': 'Domain Names'},
+                                                 {'id': 'acc',
+                                                  'name': 'Accuracy %'},
+                                                 {'id': 'count',
+                                                  'name': 'Queries'}],
+                                        fixed_rows={'headers': True},
+                                        style_table={
+                                            'height': 360,
+                                            'overflowY': 'auto',
+                                            'backgroundColor': '#F9F9F9',
+                                            'margin-left': '10px'
+                                        },
+                                        style_as_list_view=True,
+                                        style_cell={
+                                            'padding': '5px',
+                                            'backgroundColor': '#F9F9F9',
+                                            'whiteSpace': 'no-wrap',
+                                            'overflow': 'hidden',
+                                            'textOverflow': 'ellipsis',
+                                            'textAlign': 'center',
+                                            'font-family': 'Arial',
+                                            'color': '#333',
+                                            'fontSize': 15,
+                                            'maxWidth': 0
+                                        },
+                                        style_data_conditional=[
+                                            {
+                                                'if': {
+                                                    'filter_query': '{acc} < 95',
+                                                    'column_id': i
+                                                },
+                                                'backgroundColor': '#f8b0a8',
+                                            } for i in ['sl_no', 'domain', 'acc',
+                                                        'count']
+                                        ],
+                                        style_header={
+                                            'fontWeight': 'bold'
+                                        },
+                                    )
+                                ], id='benign_dns_table_div'),
+
+                                html.Div([
+                                    html.Br(),
+                                    dcc.Graph(id='benign_bar_graph', )],
+                                    id='benign_bar_graph_div'),
+
+                            ],
+                                label='Benign Domains',
+                                value='tab-4', className='pretty_container'),
+
+                        ]),
+
+                    ], className="pretty_container eight columns",
+                        style={'color': '#2e86c1', 'font-size': '16px'}),
+
                 ],
-                className="four columns",
-                id="pie",
+                className="row flex-display",
             ),
+        ], label='Historical Analysis', value='historical_analysis',
+            className='pretty_container'
+        ),
+
+        dcc.Tab([
             html.Div([
-                dcc.Tabs(id='tabs-example', value='tab-1', children=[
-                    dcc.Tab([
-                        html.Div([dcc.Graph(id='freq_graph', )]), ],
-                        label='Requests Plot', value='tab-1',
-                        className='pretty_container'),
-                    dcc.Tab([
-                        html.Div([
-                            html.Br(),
-                            html.P(
-                                "List of IP addresses that queried the Domain",
-                                style={'color': '#333',
-                                       'font-size': '18px',
-                                       'text-align': 'center'
-                                       },
-                                # className="control_label"
-                            ),
-                            html.Br(),
-                            dash_table.DataTable(
-                                id='ip_table_',
-                                columns=[{'id': 'sl_no', 'name': 'Sl. No.'},
-                                         {'id': 'ip', 'name': 'IP Address'},
-                                         {'id': 'count', 'name': 'Queries'}],
-                                fixed_rows={'headers': True},
-                                style_table={
-                                    'height': 380,
-                                    'overflowY': 'auto',
-                                    'backgroundColor': '#F9F9F9',
-                                    'margin-left': '10px'
-                                },
-                                style_as_list_view=True,
-                                style_cell={
-                                    'padding': '5px',
-                                    'backgroundColor': '#F9F9F9',
-                                    'whiteSpace': 'no-wrap',
-                                    'overflow': 'hidden',
-                                    'textOverflow': 'ellipsis',
-                                    'textAlign': 'center',
-                                    'font-family': 'Arial',
-                                    'color': '#333',
-                                    'fontSize': 15
-                                },
-                                style_header={
-                                    'fontWeight': 'bold'
-                                },
-                            )
-                        ], )
-                    ], label='Queries per IP Address', value='tab-2',
-                        className='pretty_container', id='ip_table'),
-                    dcc.Tab([
-                        daq.ToggleSwitch(
-                            id='mal_toggle_switch',
-                            value=False,
-                            vertical=False,
-                            labelPosition='bottom',
-                            style={'float': 'right'}
+                html.Div(
+                    [
+                        dcc.Tabs(id="", value='not_vetted_tab', children=[
+                            dcc.Tab([
+                                html.Div([
+                                    html.Br(),
+                                    html.P(
+                                        "List of Non - Vetted Domains",
+                                        style={'color': '#333',
+                                               'font-size': '18px',
+                                               'text-align': 'center'
+                                               },
+                                        # className="control_label"
+                                    ),
+                                    html.Br(),
+                                    dash_table.DataTable(
+                                        id='non_vetted_table',
+                                        columns=[{'id': 'sl_no',
+                                                  'name': 'Sl. No.'},
+                                                 {'id': 'domain',
+                                                  'name': 'Domain Name'},
+                                                 {'id': 'acc',
+                                                  'name': 'Accuracy %'},
+                                                 {'id': 'count',
+                                                  'name': 'Queries'}],
+                                        fixed_rows={'headers': True},
+                                        style_table={
+                                            'height': 380,
+                                            'overflowY': 'auto',
+                                            'backgroundColor': '#F9F9F9',
+                                            'margin-left': '10px'
+                                        },
+                                        style_as_list_view=True,
+                                        style_cell={
+                                            'padding': '5px',
+                                            'backgroundColor': '#F9F9F9',
+                                            'whiteSpace': 'no-wrap',
+                                            'overflow': 'hidden',
+                                            'textOverflow': 'ellipsis',
+                                            'textAlign': 'center',
+                                            'font-family': 'Arial',
+                                            'color': '#333',
+                                            'fontSize': 15
+                                        },
+                                        style_header={
+                                            'fontWeight': 'bold'
+                                        },
+                                        row_selectable="multi",
+                                    )
+                                ], )
+                            ], label='Not Vetted', value='not_vetted_tab'),
+                            dcc.Tab([
+                                html.Div([
+                                    html.Br(),
+                                    html.P(
+                                        "List of Benign Domains",
+                                        style={'color': '#333',
+                                               'font-size': '18px',
+                                               'text-align': 'center'
+                                               },
+                                        # className="control_label"
+                                    ),
+                                    html.Br(),
+                                    dash_table.DataTable(
+                                        id='benign_vet_table',
+                                        columns=[{'id': 'sl_no',
+                                                  'name': 'Sl. No.'},
+                                                 {'id': 'domain',
+                                                  'name': 'Domain Name'},
+                                                 {'id': 'acc',
+                                                  'name': 'Accuracy %'},
+                                                 {'id': 'count',
+                                                  'name': 'Queries'}],
+                                        fixed_rows={'headers': True},
+                                        style_table={
+                                            'height': 380,
+                                            'overflowY': 'auto',
+                                            'backgroundColor': '#F9F9F9',
+                                            'margin-left': '10px'
+                                        },
+                                        style_as_list_view=True,
+                                        style_cell={
+                                            'padding': '5px',
+                                            'backgroundColor': '#F9F9F9',
+                                            'whiteSpace': 'no-wrap',
+                                            'overflow': 'hidden',
+                                            'textOverflow': 'ellipsis',
+                                            'textAlign': 'center',
+                                            'font-family': 'Arial',
+                                            'color': '#333',
+                                            'fontSize': 15
+                                        },
+                                        style_header={
+                                            'fontWeight': 'bold'
+                                        },
+                                        row_selectable="multi",
+                                    )
+                                ], )
+                            ], label='Benign', value='benign_tab'),
+                            dcc.Tab([
+                                html.Div([
+                                    html.Br(),
+                                    html.P(
+                                        "List of Honeypotted Domains",
+                                        style={'color': '#333',
+                                               'font-size': '18px',
+                                               'text-align': 'center'
+                                               },
+                                        # className="control_label"
+                                    ),
+                                    html.Br(),
+                                    dash_table.DataTable(
+                                        id='honeypot_vet_table',
+                                        columns=[{'id': 'sl_no',
+                                                  'name': 'Sl. No.'},
+                                                 {'id': 'domain',
+                                                  'name': 'Domain Name'},
+                                                 {'id': 'acc',
+                                                  'name': 'Accuracy %'},
+                                                 {'id': 'count',
+                                                  'name': 'Queries'}],
+                                        fixed_rows={'headers': True},
+                                        style_table={
+                                            'height': 380,
+                                            'overflowY': 'auto',
+                                            'backgroundColor': '#F9F9F9',
+                                            'margin-left': '10px'
+                                        },
+                                        style_as_list_view=True,
+                                        style_cell={
+                                            'padding': '5px',
+                                            'backgroundColor': '#F9F9F9',
+                                            'whiteSpace': 'no-wrap',
+                                            'overflow': 'hidden',
+                                            'textOverflow': 'ellipsis',
+                                            'textAlign': 'center',
+                                            'font-family': 'Arial',
+                                            'color': '#333',
+                                            'fontSize': 15
+                                        },
+                                        style_header={
+                                            'fontWeight': 'bold'
+                                        },
+                                        row_selectable="multi",
+                                    )
+                                ], )
+                            ], label='Honeypot', value='honeypot_tab'),
+                            dcc.Tab([
+                                html.Div([
+                                    html.Br(),
+                                    html.P(
+                                        "List of Blacklisted Domains",
+                                        style={'color': '#333',
+                                               'font-size': '18px',
+                                               'text-align': 'center'
+                                               },
+                                        # className="control_label"
+                                    ),
+                                    html.Br(),
+                                    dash_table.DataTable(
+                                        id='blacklist_vet_table',
+                                        columns=[{'id': 'sl_no',
+                                                  'name': 'Sl. No.'},
+                                                 {'id': 'domain',
+                                                  'name': 'Domain Name'},
+                                                 {'id': 'acc',
+                                                  'name': 'Accuracy %'},
+                                                 {'id': 'count',
+                                                  'name': 'Queries'}],
+                                        fixed_rows={'headers': True},
+                                        style_table={
+                                            'height': 380,
+                                            'overflowY': 'auto',
+                                            'backgroundColor': '#F9F9F9',
+                                            'margin-left': '10px'
+                                        },
+                                        style_as_list_view=True,
+                                        style_cell={
+                                            'padding': '5px',
+                                            'backgroundColor': '#F9F9F9',
+                                            'whiteSpace': 'no-wrap',
+                                            'overflow': 'hidden',
+                                            'textOverflow': 'ellipsis',
+                                            'textAlign': 'center',
+                                            'font-family': 'Arial',
+                                            'color': '#333',
+                                            'fontSize': 15
+                                        },
+                                        style_header={
+                                            'fontWeight': 'bold'
+                                        },
+                                        row_selectable="multi",
+                                    )
+                                ], )
+                            ], label='Blacklist', value='blacklist_tab'),
+                        ], style={'color': '#2e86c1', 'font-size': '18px'}),
+                    ], className='pretty_container nine columns',
+                ),
+                html.Div([
+                    html.Div([
+                        html.P("Status:",
+                               style={'display': 'inline',
+                                      'color': '#2e86c1',
+                                      'font-size': '18px'},
+                               className="control_label", ),
+                        dcc.RadioItems(
+                            id="domain_status",
+                            options=[
+                                {"label": "Not Vetted", "value": "not_vetted"},
+                                {"label": "Benign", "value": "benign"},
+                                {"label": "Honeypot", "value": "honeypot"},
+                                {"label": "Blacklist", "value": "blacklist"}
+                            ],
+                            labelStyle={"display": "inline-block"},
+                            style={'color': '#2e86c1'},
+                            className="dcc_control",
                         ),
                         html.Br(),
-                        html.Div([
-                            html.Br(),
-                            html.P(
-                                "Malicious Domains",
-                                style={'color': '#333',
-                                       'font-size': '18px',
-                                       'text-align': 'center'
-                                       },
-                                # className="control_label"
-                            ),
-                            html.Br(),
-                            dash_table.DataTable(
-                                id='mal_dns_table',
-                                columns=[{'id': 'sl_no', 'name': 'Sl. No.'},
-                                         {'id': 'domain',
-                                          'name': 'Domain Names'},
-                                         {'id': 'acc', 'name': 'Accuracy %'},
-                                         {'id': 'count', 'name': 'Queries'}],
-                                fixed_rows={'headers': True},
-                                data=[{'sl_no': 1, 'ip': 1, 'count': 1}],
-                                style_table={
-                                    'height': 360,
-                                    'overflowY': 'auto',
-                                    'backgroundColor': '#F9F9F9',
-                                    'margin-left': '10px'
-                                },
-                                style_as_list_view=True,
-                                style_cell={
-                                    'padding': '5px',
-                                    'backgroundColor': '#F9F9F9',
-                                    'whiteSpace': 'no-wrap',
-                                    'overflow': 'hidden',
-                                    'textOverflow': 'ellipsis',
-                                    'textAlign': 'center',
-                                    'font-family': 'Arial',
-                                    'color': '#333',
-                                    'fontSize': 15,
-                                    'maxWidth': 0
-                                },
-                                style_data_conditional=[
-                                    {
-                                        'if': {
-                                            'filter_query': '{acc} < 95',
-                                            'column_id': i
-                                        },
-                                        'backgroundColor': '#f8b0a8',
-                                    } for i in ['sl_no', 'domain', 'acc',
-                                                'count']
-                                ],
-                                style_header={
-                                    'fontWeight': 'bold'
-                                },
-                            )
-                        ], id='mal_dns_table_div'),
-                        html.Div([
-                            html.Br(),
-                            dcc.Graph(id='mal_bar_graph', )],
-                            id='mal_bar_graph_div'),
-                    ],
-                        label='Malicious Domains',
-                        value='tab-3', className='pretty_container'),
-                    dcc.Tab([
-                        daq.ToggleSwitch(
-                            id='benign_toggle_switch',
-                            value=False,
-                            vertical=False,
-                            labelPosition='bottom',
-                            style={'float': 'right'}
-                        ),
-                        html.Br(),
-                        html.Div([
-                            html.Br(),
-                            html.P(
-                                "Benign Domains",
-                                style={'color': '#333',
-                                       'font-size': '18px',
-                                       'text-align': 'center'
-                                       },
-                                # className="control_label"
-                            ),
-                            html.Br(),
-                            dash_table.DataTable(
-                                id='benign_dns_table',
-                                columns=[{'id': 'sl_no', 'name': 'Sl. No.'},
-                                         {'id': 'domain',
-                                          'name': 'Domain Names'},
-                                         {'id': 'acc', 'name': 'Accuracy %'},
-                                         {'id': 'count', 'name': 'Queries'}],
-                                fixed_rows={'headers': True},
-                                style_table={
-                                    'height': 360,
-                                    'overflowY': 'auto',
-                                    'backgroundColor': '#F9F9F9',
-                                    'margin-left': '10px'
-                                },
-                                style_as_list_view=True,
-                                style_cell={
-                                    'padding': '5px',
-                                    'backgroundColor': '#F9F9F9',
-                                    'whiteSpace': 'no-wrap',
-                                    'overflow': 'hidden',
-                                    'textOverflow': 'ellipsis',
-                                    'textAlign': 'center',
-                                    'font-family': 'Arial',
-                                    'color': '#333',
-                                    'fontSize': 15,
-                                    'maxWidth': 0
-                                },
-                                style_data_conditional=[
-                                    {
-                                        'if': {
-                                            'filter_query': '{acc} < 95',
-                                            'column_id': i
-                                        },
-                                        'backgroundColor': '#f8b0a8',
-                                    } for i in ['sl_no', 'domain', 'acc',
-                                                'count']
-                                ],
-                                style_header={
-                                    'fontWeight': 'bold'
-                                },
-                            )
-                        ], id='benign_dns_table_div'),
+                        html.Div([html.P("",
+                                         style={'display': 'inline',
+                                                'color': '#2e86c1',
+                                                'font-size': '18px'},
+                                         className="control_label", ),
+                                  html.Button('Submit',
+                                              id='submit_input_vet',
+                                              n_clicks=0,
+                                              style={'float': 'right',
+                                                     'margin-right': '-6px',
+                                                     'color': '#2e86c1',
+                                                     'font': 'Arial'}, ),
+                                  ], )
+                    ]),
 
-                        html.Div([
-                            html.Br(),
-                            dcc.Graph(id='benign_bar_graph', )],
-                            id='benign_bar_graph_div'),
+                ], className='pretty_container three columns')
+            ], className="row")
 
-                    ],
-                        label='Benign Domains',
-                        value='tab-4', className='pretty_container'),
-
-                ]),
-
-            ], className="pretty_container eight columns",
-                style={'color': '#2e86c1', 'font-size': '16px'}),
-
-        ],
-        className="row flex-display",
-    ),
+        ], label='Manual Vetting', value='manual_vetting',
+            className='pretty_container',
+        )
+    ], style={'color': '#2e86c1', 'font-size': '18px', 'width': '500px'})
 ])
 
 
