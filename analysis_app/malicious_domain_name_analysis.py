@@ -426,7 +426,8 @@ app.layout = html.Div(children=[
                                         row_selectable="multi",
                                     )
                                 ], )
-                            ], label='Not Vetted', value='not_vetted_tab'),
+                            ], label='Not Vetted', value='not_vetted_tab',
+                            className='pretty_container'),
                             dcc.Tab([
                                 html.Div([
                                     html.Br(),
@@ -474,7 +475,8 @@ app.layout = html.Div(children=[
                                         row_selectable="multi",
                                     )
                                 ], )
-                            ], label='Benign', value='benign_tab'),
+                            ], label='Benign', value='benign_tab',
+                            className='pretty_container'),
                             dcc.Tab([
                                 html.Div([
                                     html.Br(),
@@ -522,7 +524,8 @@ app.layout = html.Div(children=[
                                         row_selectable="multi",
                                     )
                                 ], )
-                            ], label='Honeypot', value='honeypot_tab'),
+                            ], label='Honeypot', value='honeypot_tab',
+                                className='pretty_container'),
                             dcc.Tab([
                                 html.Div([
                                     html.Br(),
@@ -570,7 +573,8 @@ app.layout = html.Div(children=[
                                         row_selectable="multi",
                                     )
                                 ], )
-                            ], label='Blacklist', value='blacklist_tab'),
+                            ], label='Blacklist', value='blacklist_tab',
+                                className='pretty_container'),
                         ], style={'color': '#2e86c1', 'font-size': '18px'}),
                     ], className='pretty_container nine columns',
                 ),
