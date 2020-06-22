@@ -388,7 +388,7 @@ app.layout = html.Div(children=[
             html.Div([
                 html.Div(
                     [
-                        dcc.Tabs(id="", value='not_vetted_tab', children=[
+                        dcc.Tabs(id="", value='not_vetted', children=[
                             dcc.Tab([
                                 html.Div([
                                     html.Br(),
@@ -402,7 +402,7 @@ app.layout = html.Div(children=[
                                     ),
                                     html.Br(),
                                     dash_table.DataTable(
-                                        id='non_vetted_table',
+                                        id='not_vetted_table',
                                         columns=[{'id': 'sl_no',
                                                   'name': 'Sl. No.'},
                                                  {'id': 'domain',
@@ -434,9 +434,10 @@ app.layout = html.Div(children=[
                                             'fontWeight': 'bold'
                                         },
                                         row_selectable="multi",
+                                        selected_rows=[],
                                     )
                                 ], )
-                            ], label='Not Vetted', value='not_vetted_tab',
+                            ], label='Not Vetted', value='not_vetted',
                                 className='pretty_container'),
                             dcc.Tab([
                                 html.Div([
@@ -483,9 +484,10 @@ app.layout = html.Div(children=[
                                             'fontWeight': 'bold'
                                         },
                                         row_selectable="multi",
+                                        selected_rows=[],
                                     )
                                 ], )
-                            ], label='Benign', value='benign_tab',
+                            ], label='Benign', value='benign_vet',
                                 className='pretty_container'),
                             dcc.Tab([
                                 html.Div([
@@ -532,9 +534,10 @@ app.layout = html.Div(children=[
                                             'fontWeight': 'bold'
                                         },
                                         row_selectable="multi",
+                                        selected_rows=[],
                                     )
                                 ], )
-                            ], label='Honeypot', value='honeypot_tab',
+                            ], label='Honeypot', value='honeypot',
                                 className='pretty_container'),
                             dcc.Tab([
                                 html.Div([
@@ -581,9 +584,10 @@ app.layout = html.Div(children=[
                                             'fontWeight': 'bold'
                                         },
                                         row_selectable="multi",
+                                        selected_rows=[],
                                     )
                                 ], )
-                            ], label='Blacklist', value='blacklist_tab',
+                            ], label='Blacklist', value='blacklist',
                                 className='pretty_container'),
                         ], style={'color': '#2e86c1', 'font-size': '18px'}),
                     ], className='pretty_container nine columns',
@@ -596,7 +600,7 @@ app.layout = html.Div(children=[
                                       'font-size': '18px'},
                                className="control_label", ),
                         dcc.RadioItems(
-                            id="domain_status",
+                            id="domain_vet_status",
                             options=[
                                 {"label": "Not Vetted", "value": "not_vetted"},
                                 {"label": "Benign", "value": "benign"},
@@ -607,14 +611,10 @@ app.layout = html.Div(children=[
                             style={'color': '#2e86c1'},
                             className="dcc_control",
                         ),
-                        html.Br(),
-                        html.Div([html.P("",
-                                         style={'display': 'inline',
-                                                'color': '#2e86c1',
-                                                'font-size': '18px'},
-                                         className="control_label", ),
+                        html.Div([html.Div(id='input_vet_message',
+                                           className="control_label"),
                                   html.Button('Submit',
-                                              id='submit_input_vet',
+                                              id='submit_vet_input',
                                               n_clicks=0,
                                               style={'float': 'right',
                                                      'margin-right': '-6px',
@@ -632,6 +632,7 @@ app.layout = html.Div(children=[
     ], style={'color': '#2e86c1', 'font-size': '18px', 'width': '500px'})
 ])
 
+# Historical Analysis
 
 # Control Messages
 
@@ -1031,6 +1032,82 @@ def update_benign_bar_graph(value, interval):
         )]
     figure = dict(data=data, layout=layout_bar)
     return figure
+
+
+# Manual Vetting
+
+@app.callback([Output('input_vet_message', 'children'),
+               Output('domain_vet_status', 'value')],
+              [Input('submit_vet_input', 'n_clicks'),
+               Input('not_vetted_table', "derived_virtual_selected_rows"),
+               Input('benign_vet_table', "derived_virtual_selected_rows"),
+               Input('honeypot_vet_table', "derived_virtual_selected_rows"),
+               Input('blacklist_vet_table', "derived_virtual_selected_rows")],
+              [State('domain_vet_status', 'value')])
+def update_and_input_vet_message_vet_tables(n_clicks, nv_select, benignv_select,
+                                            hv_select, blackv_select,
+                                            domain_vet):
+    if domain_vet is None:
+        return 'Please select an option', None
+    else:
+        print(n_clicks, nv_select, benignv_select, hv_select, blackv_select, domain_vet)
+        return 'Test Selection', None
+
+
+@app.callback(Output('not_vetted_table', 'data'),
+              [Input('interval', 'n_intervals')])
+def update_not_vetted_table(n_intervals):
+    try:
+        not_vetted = es.get(index='not_vetted', id=1)['_source']
+        data = [dict({'sl_no': j + 1, 'domain': i,
+                      'class': not_vetted[i]['class'],
+                      'acc': not_vetted[i]['acc']})
+                for i, j in zip(not_vetted.keys(), range(len(not_vetted)))]
+    except:
+        data = []
+    return data
+
+
+@app.callback(Output('benign_vet_table', 'data'),
+              [Input('interval', 'n_intervals')])
+def update_benign_vet_table(n_intervals):
+    try:
+        benign_vet = es.get(index='benign_vet', id=1)['_source']
+        data = [dict({'sl_no': j + 1, 'domain': i,
+                      'class': benign_vet[i]['class'],
+                      'acc': benign_vet[i]['acc']})
+                for i, j in zip(benign_vet.keys(), range(len(benign_vet)))]
+    except:
+        data = []
+    return data
+
+
+@app.callback(Output('honeypot_vet_table', 'data'),
+              [Input('interval', 'n_intervals')])
+def update_honeypot_vet_table(n_intervals):
+    try:
+        honeypot_vet = es.get(index='honeypot', id=1)['_source']
+        data = [dict({'sl_no': j + 1, 'domain': i,
+                      'class': honeypot_vet[i]['class'],
+                      'acc': honeypot_vet[i]['acc']})
+                for i, j in zip(honeypot_vet.keys(), range(len(honeypot_vet)))]
+    except:
+        data = []
+    return data
+
+
+@app.callback(Output('blacklist_vet_table', 'data'),
+              [Input('interval', 'n_intervals')])
+def update_blacklist_vet_table(n_intervals):
+    try:
+        blacklist_vet = es.get(index='blacklist', id=1)['_source']
+        data = [dict({'sl_no': j + 1, 'domain': i,
+                      'class': blacklist_vet[i]['class'],
+                      'acc': blacklist_vet[i]['acc']})
+                for i, j in zip(blacklist_vet.keys(), range(len(blacklist_vet)))]
+    except:
+        data = []
+    return data
 
 
 if __name__ == '__main__':
