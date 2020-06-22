@@ -34,6 +34,20 @@ def server():
     model = models.load_model(
         'C:\Chanakya\Projects\coredns_dns_ml_firewall\Code\Jupyter Notebooks\saved_models\dns_alert_model.hdf5')
 
+    if ('mal' not in es.indices.get('*')) and \
+            ('benign' not in es.indices.get('*')):
+        es.index(index='mal', id=1, body={})
+        es.index(index='benign', id=1, body={})
+
+    if ('not_vetted' not in es.indices.get('*')) and \
+            ('benign_vet' not in es.indices.get('*')) and \
+            ('honeypot' not in es.indices.get('*')) and \
+            ('blacklist' not in es.indices.get('*')):
+        es.index(index='not_vetted', id=1, body={})
+        es.index(index='benign_vet', id=1, body={})
+        es.index(index='honeypot', id=1, body={})
+        es.index(index='blacklist', id=1, body={})
+
     if request.method == 'POST':
         domain_json = request.get_json()
         key = list(domain_json.keys())
@@ -47,9 +61,7 @@ def server():
         input_ = np.reshape(input_, (1, 16, 16, 1))
         send = str(model.predict(input_)[0, 0])
 
-        if ('mal' not in es.indices.get('*')) and ('benign' not in es.indices.get('*')):
-            es.index(index='mal', id=1, body={})
-            es.index(index='benign', id=1, body={})
+        body_not_vetted = es.get(index='not_vetted', id=1)['_source']
 
         if float(send) < 0.5:
             body = es.get(index='benign', id=1)['_source']
@@ -58,10 +70,24 @@ def server():
             else:
                 body[domain_name] = {}
                 body[domain_name]['count'] = 1
-                body[domain_name]['status'] = float(format(((1-float(send))*100),
-                                                           '.2f'))
+                body[domain_name]['status'] = \
+                    float(format(((1 - float(send)) * 100), '.2f'))
+
+                if body[domain_name]['status'] < 90:
+
+                    body_not_vetted[domain_name] = {}
+                    body_not_vetted[domain_name]['class'] = 'Benign'
+                    body_not_vetted[domain_name]['acc'] = \
+                        float(format(((1 - float(send)) * 100), '.2f'))
+
+                    update_body_not_vetted = \
+                        {'doc': {domain_name: body_not_vetted[domain_name]}}
+                    es.update(index='not_vetted', id=1,
+                              body=update_body_not_vetted)
+
             update_body = {'doc': {domain_name: body[domain_name]}}
             es.update(index='benign', id=1, body=update_body)
+
         else:
             body = es.get(index='mal', id=1)['_source']
             if domain_name in body.keys():
@@ -69,8 +95,21 @@ def server():
             else:
                 body[domain_name] = {}
                 body[domain_name]['count'] = 1
-                body[domain_name]['status'] = float(format(float(send)*100,
-                                                           '.2f'))
+                body[domain_name]['status'] = \
+                    float(format(float(send) * 100, '.2f'))
+
+                if body[domain_name]['status'] < 90:
+
+                    body_not_vetted[domain_name] = {}
+                    body_not_vetted[domain_name]['class'] = 'Malicious'
+                    body_not_vetted[domain_name]['acc'] = \
+                        float(format(float(send) * 100, '.2f'))
+
+                    update_body_not_vetted = \
+                        {'doc': {domain_name: body_not_vetted[domain_name]}}
+                    es.update(index='not_vetted', id=1,
+                              body=update_body_not_vetted)
+
             update_body = {'doc': {domain_name: body[domain_name]}}
             es.update(index='mal', id=1, body=update_body)
 

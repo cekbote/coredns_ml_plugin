@@ -410,9 +410,7 @@ app.layout = html.Div(children=[
                                                  {'id': 'class',
                                                   'name': 'Classification'},
                                                  {'id': 'acc',
-                                                  'name': 'Accuracy %'},
-                                                 {'id': 'count',
-                                                  'name': 'Queries'}],
+                                                  'name': 'Accuracy %'}],
                                         fixed_rows={'headers': True},
                                         style_table={
                                             'height': 380,
@@ -461,9 +459,7 @@ app.layout = html.Div(children=[
                                                  {'id': 'class',
                                                   'name': 'Classification'},
                                                  {'id': 'acc',
-                                                  'name': 'Accuracy %'},
-                                                 {'id': 'count',
-                                                  'name': 'Queries'}],
+                                                  'name': 'Accuracy %'}],
                                         fixed_rows={'headers': True},
                                         style_table={
                                             'height': 380,
@@ -512,9 +508,7 @@ app.layout = html.Div(children=[
                                                  {'id': 'class',
                                                   'name': 'Classification'},
                                                  {'id': 'acc',
-                                                  'name': 'Accuracy %'},
-                                                 {'id': 'count',
-                                                  'name': 'Queries'}],
+                                                  'name': 'Accuracy %'}],
                                         fixed_rows={'headers': True},
                                         style_table={
                                             'height': 380,
@@ -563,9 +557,7 @@ app.layout = html.Div(children=[
                                                  {'id': 'class',
                                                   'name': 'Classification'},
                                                  {'id': 'acc',
-                                                  'name': 'Accuracy %'},
-                                                 {'id': 'count',
-                                                  'name': 'Queries'}],
+                                                  'name': 'Accuracy %'},],
                                         fixed_rows={'headers': True},
                                         style_table={
                                             'height': 380,
