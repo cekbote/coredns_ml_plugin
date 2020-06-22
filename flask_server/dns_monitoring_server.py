@@ -52,7 +52,7 @@ def server():
         domain_json = request.get_json()
         key = list(domain_json.keys())
         domain_name = domain_json[key[0]]
-        domain_name = domain_json.split('www.')
+        domain_name = domain_name.split('www.')
         if len(domain_name) == 1:
             domain_name = domain_name[0]
         else:
