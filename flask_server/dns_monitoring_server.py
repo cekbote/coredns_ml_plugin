@@ -53,7 +53,7 @@ def server():
         key = list(domain_json.keys())
         domain_name = domain_json[key[0]]
         domain_name = domain_json.split('www.')
-        if len(domain_name == 1):
+        if len(domain_name) == 1:
             domain_name = domain_name[0]
         else:
             domain_name = domain_name[1]
