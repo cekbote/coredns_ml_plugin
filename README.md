@@ -1,21 +1,23 @@
-# CoreDNS Machine Learning Plugin
+# CoreDNS Machine Learning Plugin 
 
 [![License](https://img.shields.io/github/license/cekbote/coredns_ml_plugin?style=flat-square)](https://github.com/cekbote/coredns_ml_plugin/blob/master/LICENSE)
 [![GitHub forks](https://img.shields.io/github/forks/cekbote/coredns_ml_plugin?style=flat-square)](https://github.com/cekbote/coredns_ml_plugin/network)
 
-This CoreDNS plugin connects the CoreDNS server to a Machine Learning 
-Environment for DNS request and response analysis, monitoring and alerting. 
+This repository contains code for connecting the CoreDNS server to a Machine 
+Learning Environment for DNS request and response analysis, monitoring and 
+alerting.
 
 ## Overview 
 
-This plugin is the result of my work on a project during GSoC 2020. The goal of 
-the project was introducing the integration of machine learning capabilities
+This repository is the result of my work on a project during GSoC 2020. The goal 
+of the project was introducing the integration of machine learning capabilities
 with the CoreDNS server.
 
-The initial use case was the identification of the DNS requests for the records
-of the domains that could be used by malicious hackers and other computer 
-criminals. Upon the identification of the requests the plugin would either alert
-the sysadmin or block the requests and responses.  
+The initial use case was the identification of the DNS requests ,via machine 
+learning, for the records of the domains that could be used by malicious hackers 
+and other computer criminals. Upon the identification of the requests the plugin 
+would either alert the sysadmin for manual vetting or block the requests and 
+responses.  
 
 ## Approach
 
@@ -38,7 +40,8 @@ benign via a pre-trained TensorFlow model and then stores the result along with
 other metadata to a database.
 
 The results and other metadata are visualized and analysed via a Dash
-application. 
+application. Moreover, this application can also be used for manually vetting 
+domain names. 
 
 ### Machine Learning
 
