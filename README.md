@@ -21,7 +21,7 @@ responses.
 
 ## Approach
 
-### Application Middleware
+### General Overview
 
 Currently, Golang doesn't have native libraries for the interaction with the 
 CUDA platform. At the same time, the Python ecosystem has tools like TensorFlow,
@@ -29,19 +29,19 @@ PyTorch, MXNet and various others that not only interact with the CUDA platform
 but also allows for the easy prototyping and evaluation of deep learning models. 
 
 This project combines the deep learning capabilities that the Python ecosystem
-provides by creating a Python Middleware. The plugin intercepts a request 
-and forwards it to Python middleware for further processing. 
+provides, with CoreDNS, by creating:
+ - A CoreDNS Plugin (ML Plugin): The plugin intercepts requests and forwards 
+them to the Python middleware for further processing. 
+ - An Application Middleware (Flask Server): The middleware is a Python Flask 
+Server that receives the request along with other metadata. The Flask Server 
+infers whether the request was malicious or benign, via a pre-trained TensorFlow 
+Model, and then sends back a response based on this result, to the plugin. It 
+also stores the result along with other metadata, to a database.
+- A Visualization Dashboard (Dash Application): To visualize and analyse the 
+results, a visualization dashboard (Dash Application) was created. This
+application can also be used to manually vet domain names. 
 
-![image info](./readme_assets/ml_plugin_approach.png)
-
-The middleware is a Python Flask Server that receives the request along with 
-other metadata. The Flask Server infers whether the request was malicious or 
-benign via a pre-trained TensorFlow model and then stores the result along with
-other metadata to a database.
-
-The results and other metadata are visualized and analysed via a Dash
-application. Moreover, this application can also be used for manually vetting 
-domain names. 
+![image info](./readme_assets/general_overview.png)
 
 ### Machine Learning
 
