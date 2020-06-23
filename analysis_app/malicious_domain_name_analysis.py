@@ -1040,13 +1040,17 @@ def update_benign_bar_graph(value, interval):
 # Manual Vetting
 
 @app.callback([Output('input_vet_message', 'children'),
-               Output('change_status', 'value')],
-              [Input('submit_vet_input', 'n_clicks'),
-               Input('not_vetted_table', "derived_virtual_selected_rows"),
-               Input('benign_vet_table', "derived_virtual_selected_rows"),
-               Input('honeypot_vet_table', "derived_virtual_selected_rows"),
-               Input('blacklist_vet_table', "derived_virtual_selected_rows")],
-              [State('change_status', 'value')])
+               Output('change_status', 'value'),
+               Output('not_vetted_table', "derived_viewport_selected_rows"),
+               Output('benign_vet_table', "derived_viewport_selected_rows"),
+               Output('honeypot_vet_table', "derived_viewport_selected_rows"),
+               Output('blacklist_vet_table', "derived_viewport_selected_rows")],
+              [Input('submit_vet_input', 'n_clicks')],
+              [State('not_vetted_table', "derived_viewport_selected_rows"),
+               State('benign_vet_table', "derived_viewport_selected_rows"),
+               State('honeypot_vet_table', "derived_viewport_selected_rows"),
+               State('blacklist_vet_table', "derived_viewport_selected_rows"),
+               State('change_status', 'value'),])
 def update_and_input_vet_message_vet_tables(n_clicks, not_vetted_select,
                                             benign_vet_select,
                                             honeypot_vet_select,
@@ -1060,16 +1064,16 @@ def update_and_input_vet_message_vet_tables(n_clicks, not_vetted_select,
         for i in vet_list:
             if i is not None and i != []:
                 return 'Please select the option, the entries have to be ' \
-                       'changed to.', None
+                       'changed to.', None, None, None, None, None
         return 'Please select the entries on the left whose status has to be ' \
                'changed and also select the option, the entries have to be ' \
-               'changed to.', None
+               'changed to.', None, None, None, None, None
     else:
         for i, j in zip(vet_list, es_vet_list_names):
             if i is not None and i != []:
                 if change_status in j:
                     return 'Please enter a different option to change the ' \
-                           'status.', None
+                           'status.', None, None, None, None, None
                 else:
                     body_to_change = es.get(index=j, id=1)['_source']
                     body_to_change_keys = \
@@ -1085,10 +1089,11 @@ def update_and_input_vet_message_vet_tables(n_clicks, not_vetted_select,
                     for k in i:
                         del (body_to_change[body_to_change_keys[k]])
                     es.index(j, id=1, body=body_to_change)
-                    return 'Status change successful.', None
+                    return 'Status change successful.', \
+                           None, None, None, None, None
 
         return 'Please select the entries on the left whose status has to be ' \
-               'changed.', None
+               'changed.', None, None, None, None, None
 
 
 @app.callback(Output('not_vetted_table', 'data'),
