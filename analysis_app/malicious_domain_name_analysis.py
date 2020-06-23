@@ -388,208 +388,209 @@ app.layout = html.Div(children=[
             html.Div([
                 html.Div(
                     [
-                        dcc.Tabs(id="", value='not_vetted', children=[
-                            dcc.Tab([
-                                html.Div([
-                                    html.Br(),
-                                    html.P(
-                                        "List of Non - Vetted Domains",
-                                        style={'color': '#333',
-                                               'font-size': '18px',
-                                               'text-align': 'center'
-                                               },
-                                        # className="control_label"
-                                    ),
-                                    html.Br(),
-                                    dash_table.DataTable(
-                                        id='not_vetted_table',
-                                        columns=[{'id': 'sl_no',
-                                                  'name': 'Sl. No.'},
-                                                 {'id': 'domain',
-                                                  'name': 'Domain Name'},
-                                                 {'id': 'class',
-                                                  'name': 'Classification'},
-                                                 {'id': 'acc',
-                                                  'name': 'Accuracy %'}],
-                                        fixed_rows={'headers': True},
-                                        style_table={
-                                            'height': 380,
-                                            'overflowY': 'auto',
-                                            'backgroundColor': '#F9F9F9',
-                                            'margin-left': '10px'
-                                        },
-                                        style_as_list_view=True,
-                                        style_cell={
-                                            'padding': '5px',
-                                            'backgroundColor': '#F9F9F9',
-                                            'whiteSpace': 'no-wrap',
-                                            'overflow': 'hidden',
-                                            'textOverflow': 'ellipsis',
-                                            'textAlign': 'center',
-                                            'font-family': 'Arial',
-                                            'color': '#333',
-                                            'fontSize': 15
-                                        },
-                                        style_header={
-                                            'fontWeight': 'bold'
-                                        },
-                                        row_selectable="multi",
-                                        selected_rows=[],
-                                    )
-                                ], )
-                            ], label='Not Vetted', value='not_vetted',
-                                className='pretty_container'),
-                            dcc.Tab([
-                                html.Div([
-                                    html.Br(),
-                                    html.P(
-                                        "List of Benign Domains",
-                                        style={'color': '#333',
-                                               'font-size': '18px',
-                                               'text-align': 'center'
-                                               },
-                                        # className="control_label"
-                                    ),
-                                    html.Br(),
-                                    dash_table.DataTable(
-                                        id='benign_vet_table',
-                                        columns=[{'id': 'sl_no',
-                                                  'name': 'Sl. No.'},
-                                                 {'id': 'domain',
-                                                  'name': 'Domain Name'},
-                                                 {'id': 'class',
-                                                  'name': 'Classification'},
-                                                 {'id': 'acc',
-                                                  'name': 'Accuracy %'}],
-                                        fixed_rows={'headers': True},
-                                        style_table={
-                                            'height': 380,
-                                            'overflowY': 'auto',
-                                            'backgroundColor': '#F9F9F9',
-                                            'margin-left': '10px'
-                                        },
-                                        style_as_list_view=True,
-                                        style_cell={
-                                            'padding': '5px',
-                                            'backgroundColor': '#F9F9F9',
-                                            'whiteSpace': 'no-wrap',
-                                            'overflow': 'hidden',
-                                            'textOverflow': 'ellipsis',
-                                            'textAlign': 'center',
-                                            'font-family': 'Arial',
-                                            'color': '#333',
-                                            'fontSize': 15
-                                        },
-                                        style_header={
-                                            'fontWeight': 'bold'
-                                        },
-                                        row_selectable="multi",
-                                        selected_rows=[],
-                                    )
-                                ], )
-                            ], label='Benign', value='benign_vet',
-                                className='pretty_container'),
-                            dcc.Tab([
-                                html.Div([
-                                    html.Br(),
-                                    html.P(
-                                        "List of Honeypotted Domains",
-                                        style={'color': '#333',
-                                               'font-size': '18px',
-                                               'text-align': 'center'
-                                               },
-                                        # className="control_label"
-                                    ),
-                                    html.Br(),
-                                    dash_table.DataTable(
-                                        id='honeypot_vet_table',
-                                        columns=[{'id': 'sl_no',
-                                                  'name': 'Sl. No.'},
-                                                 {'id': 'domain',
-                                                  'name': 'Domain Name'},
-                                                 {'id': 'class',
-                                                  'name': 'Classification'},
-                                                 {'id': 'acc',
-                                                  'name': 'Accuracy %'}],
-                                        fixed_rows={'headers': True},
-                                        style_table={
-                                            'height': 380,
-                                            'overflowY': 'auto',
-                                            'backgroundColor': '#F9F9F9',
-                                            'margin-left': '10px'
-                                        },
-                                        style_as_list_view=True,
-                                        style_cell={
-                                            'padding': '5px',
-                                            'backgroundColor': '#F9F9F9',
-                                            'whiteSpace': 'no-wrap',
-                                            'overflow': 'hidden',
-                                            'textOverflow': 'ellipsis',
-                                            'textAlign': 'center',
-                                            'font-family': 'Arial',
-                                            'color': '#333',
-                                            'fontSize': 15
-                                        },
-                                        style_header={
-                                            'fontWeight': 'bold'
-                                        },
-                                        row_selectable="multi",
-                                        selected_rows=[],
-                                    )
-                                ], )
-                            ], label='Honeypot', value='honeypot',
-                                className='pretty_container'),
-                            dcc.Tab([
-                                html.Div([
-                                    html.Br(),
-                                    html.P(
-                                        "List of Blacklisted Domains",
-                                        style={'color': '#333',
-                                               'font-size': '18px',
-                                               'text-align': 'center'
-                                               },
-                                        # className="control_label"
-                                    ),
-                                    html.Br(),
-                                    dash_table.DataTable(
-                                        id='blacklist_vet_table',
-                                        columns=[{'id': 'sl_no',
-                                                  'name': 'Sl. No.'},
-                                                 {'id': 'domain',
-                                                  'name': 'Domain Name'},
-                                                 {'id': 'class',
-                                                  'name': 'Classification'},
-                                                 {'id': 'acc',
-                                                  'name': 'Accuracy %'},],
-                                        fixed_rows={'headers': True},
-                                        style_table={
-                                            'height': 380,
-                                            'overflowY': 'auto',
-                                            'backgroundColor': '#F9F9F9',
-                                            'margin-left': '10px'
-                                        },
-                                        style_as_list_view=True,
-                                        style_cell={
-                                            'padding': '5px',
-                                            'backgroundColor': '#F9F9F9',
-                                            'whiteSpace': 'no-wrap',
-                                            'overflow': 'hidden',
-                                            'textOverflow': 'ellipsis',
-                                            'textAlign': 'center',
-                                            'font-family': 'Arial',
-                                            'color': '#333',
-                                            'fontSize': 15
-                                        },
-                                        style_header={
-                                            'fontWeight': 'bold'
-                                        },
-                                        row_selectable="multi",
-                                        selected_rows=[],
-                                    )
-                                ], )
-                            ], label='Blacklist', value='blacklist',
-                                className='pretty_container'),
-                        ], style={'color': '#2e86c1', 'font-size': '18px'}),
+                        dcc.Tabs(id="vet_tab_selected", value='not_vetted',
+                                 children=[
+                                     dcc.Tab([
+                                         html.Div([
+                                             html.Br(),
+                                             html.P(
+                                                 "List of Non - Vetted Domains",
+                                                 style={'color': '#333',
+                                                        'font-size': '18px',
+                                                        'text-align': 'center'
+                                                        },
+                                                 # className="control_label"
+                                             ),
+                                             html.Br(),
+                                             dash_table.DataTable(
+                                                 id='not_vetted_table',
+                                                 columns=[{'id': 'sl_no',
+                                                           'name': 'Sl. No.'},
+                                                          {'id': 'domain',
+                                                           'name': 'Domain Name'},
+                                                          {'id': 'class',
+                                                           'name': 'Classification'},
+                                                          {'id': 'acc',
+                                                           'name': 'Accuracy %'}],
+                                                 fixed_rows={'headers': True},
+                                                 style_table={
+                                                     'height': 380,
+                                                     'overflowY': 'auto',
+                                                     'backgroundColor': '#F9F9F9',
+                                                     'margin-left': '10px'
+                                                 },
+                                                 style_as_list_view=True,
+                                                 style_cell={
+                                                     'padding': '5px',
+                                                     'backgroundColor': '#F9F9F9',
+                                                     'whiteSpace': 'no-wrap',
+                                                     'overflow': 'hidden',
+                                                     'textOverflow': 'ellipsis',
+                                                     'textAlign': 'center',
+                                                     'font-family': 'Arial',
+                                                     'color': '#333',
+                                                     'fontSize': 15
+                                                 },
+                                                 style_header={
+                                                     'fontWeight': 'bold'
+                                                 },
+                                                 row_selectable="multi",
+                                                 selected_rows=[],
+                                             )
+                                         ], )
+                                     ], label='Not Vetted', value='not_vetted',
+                                         className='pretty_container'),
+                                     dcc.Tab([
+                                         html.Div([
+                                             html.Br(),
+                                             html.P(
+                                                 "List of Benign Domains",
+                                                 style={'color': '#333',
+                                                        'font-size': '18px',
+                                                        'text-align': 'center'
+                                                        },
+                                                 # className="control_label"
+                                             ),
+                                             html.Br(),
+                                             dash_table.DataTable(
+                                                 id='benign_vet_table',
+                                                 columns=[{'id': 'sl_no',
+                                                           'name': 'Sl. No.'},
+                                                          {'id': 'domain',
+                                                           'name': 'Domain Name'},
+                                                          {'id': 'class',
+                                                           'name': 'Classification'},
+                                                          {'id': 'acc',
+                                                           'name': 'Accuracy %'}],
+                                                 fixed_rows={'headers': True},
+                                                 style_table={
+                                                     'height': 380,
+                                                     'overflowY': 'auto',
+                                                     'backgroundColor': '#F9F9F9',
+                                                     'margin-left': '10px'
+                                                 },
+                                                 style_as_list_view=True,
+                                                 style_cell={
+                                                     'padding': '5px',
+                                                     'backgroundColor': '#F9F9F9',
+                                                     'whiteSpace': 'no-wrap',
+                                                     'overflow': 'hidden',
+                                                     'textOverflow': 'ellipsis',
+                                                     'textAlign': 'center',
+                                                     'font-family': 'Arial',
+                                                     'color': '#333',
+                                                     'fontSize': 15
+                                                 },
+                                                 style_header={
+                                                     'fontWeight': 'bold'
+                                                 },
+                                                 row_selectable="multi",
+                                                 selected_rows=[],
+                                             )
+                                         ], )
+                                     ], label='Benign', value='benign_vet',
+                                         className='pretty_container'),
+                                     dcc.Tab([
+                                         html.Div([
+                                             html.Br(),
+                                             html.P(
+                                                 "List of Honeypotted Domains",
+                                                 style={'color': '#333',
+                                                        'font-size': '18px',
+                                                        'text-align': 'center'
+                                                        },
+                                                 # className="control_label"
+                                             ),
+                                             html.Br(),
+                                             dash_table.DataTable(
+                                                 id='honeypot_vet_table',
+                                                 columns=[{'id': 'sl_no',
+                                                           'name': 'Sl. No.'},
+                                                          {'id': 'domain',
+                                                           'name': 'Domain Name'},
+                                                          {'id': 'class',
+                                                           'name': 'Classification'},
+                                                          {'id': 'acc',
+                                                           'name': 'Accuracy %'}],
+                                                 fixed_rows={'headers': True},
+                                                 style_table={
+                                                     'height': 380,
+                                                     'overflowY': 'auto',
+                                                     'backgroundColor': '#F9F9F9',
+                                                     'margin-left': '10px'
+                                                 },
+                                                 style_as_list_view=True,
+                                                 style_cell={
+                                                     'padding': '5px',
+                                                     'backgroundColor': '#F9F9F9',
+                                                     'whiteSpace': 'no-wrap',
+                                                     'overflow': 'hidden',
+                                                     'textOverflow': 'ellipsis',
+                                                     'textAlign': 'center',
+                                                     'font-family': 'Arial',
+                                                     'color': '#333',
+                                                     'fontSize': 15
+                                                 },
+                                                 style_header={
+                                                     'fontWeight': 'bold'
+                                                 },
+                                                 row_selectable="multi",
+                                                 selected_rows=[],
+                                             )
+                                         ], )
+                                     ], label='Honeypot', value='honeypot',
+                                         className='pretty_container'),
+                                     dcc.Tab([
+                                         html.Div([
+                                             html.Br(),
+                                             html.P(
+                                                 "List of Blacklisted Domains",
+                                                 style={'color': '#333',
+                                                        'font-size': '18px',
+                                                        'text-align': 'center'
+                                                        },
+                                                 # className="control_label"
+                                             ),
+                                             html.Br(),
+                                             dash_table.DataTable(
+                                                 id='blacklist_vet_table',
+                                                 columns=[{'id': 'sl_no',
+                                                           'name': 'Sl. No.'},
+                                                          {'id': 'domain',
+                                                           'name': 'Domain Name'},
+                                                          {'id': 'class',
+                                                           'name': 'Classification'},
+                                                          {'id': 'acc',
+                                                           'name': 'Accuracy %'}, ],
+                                                 fixed_rows={'headers': True},
+                                                 style_table={
+                                                     'height': 380,
+                                                     'overflowY': 'auto',
+                                                     'backgroundColor': '#F9F9F9',
+                                                     'margin-left': '10px'
+                                                 },
+                                                 style_as_list_view=True,
+                                                 style_cell={
+                                                     'padding': '5px',
+                                                     'backgroundColor': '#F9F9F9',
+                                                     'whiteSpace': 'no-wrap',
+                                                     'overflow': 'hidden',
+                                                     'textOverflow': 'ellipsis',
+                                                     'textAlign': 'center',
+                                                     'font-family': 'Arial',
+                                                     'color': '#333',
+                                                     'fontSize': 15
+                                                 },
+                                                 style_header={
+                                                     'fontWeight': 'bold'
+                                                 },
+                                                 row_selectable="multi",
+                                                 selected_rows=[],
+                                             )
+                                         ], )
+                                     ], label='Blacklist', value='blacklist',
+                                         className='pretty_container'),
+                                 ], style={'color': '#2e86c1', 'font-size': '18px'}),
                     ], className='pretty_container nine columns',
                 ),
                 html.Div([
@@ -600,10 +601,10 @@ app.layout = html.Div(children=[
                                       'font-size': '18px'},
                                className="control_label", ),
                         dcc.RadioItems(
-                            id="domain_vet_status",
+                            id="change_status",
                             options=[
                                 {"label": "Not Vetted", "value": "not_vetted"},
-                                {"label": "Benign", "value": "benign"},
+                                {"label": "Benign", "value": "benign_vet"},
                                 {"label": "Honeypot", "value": "honeypot"},
                                 {"label": "Blacklist", "value": "blacklist"}
                             ],
@@ -613,6 +614,7 @@ app.layout = html.Div(children=[
                         ),
                         html.Div([html.Div(id='input_vet_message',
                                            className="control_label"),
+                                  html.Br(),
                                   html.Button('Submit',
                                               id='submit_vet_input',
                                               n_clicks=0,
@@ -631,6 +633,7 @@ app.layout = html.Div(children=[
         )
     ], style={'color': '#2e86c1', 'font-size': '18px', 'width': '500px'})
 ])
+
 
 # Historical Analysis
 
@@ -1037,21 +1040,55 @@ def update_benign_bar_graph(value, interval):
 # Manual Vetting
 
 @app.callback([Output('input_vet_message', 'children'),
-               Output('domain_vet_status', 'value')],
+               Output('change_status', 'value')],
               [Input('submit_vet_input', 'n_clicks'),
                Input('not_vetted_table', "derived_virtual_selected_rows"),
                Input('benign_vet_table', "derived_virtual_selected_rows"),
                Input('honeypot_vet_table', "derived_virtual_selected_rows"),
                Input('blacklist_vet_table', "derived_virtual_selected_rows")],
-              [State('domain_vet_status', 'value')])
-def update_and_input_vet_message_vet_tables(n_clicks, nv_select, benignv_select,
-                                            hv_select, blackv_select,
-                                            domain_vet):
-    if domain_vet is None:
-        return 'Please select an option', None
+              [State('change_status', 'value')])
+def update_and_input_vet_message_vet_tables(n_clicks, not_vetted_select,
+                                            benign_vet_select,
+                                            honeypot_vet_select,
+                                            blacklist_vet_select,
+                                            change_status):
+    vet_list = [not_vetted_select, benign_vet_select, honeypot_vet_select,
+                blacklist_vet_select]
+    es_vet_list_names = ['not_vetted', 'benign_vet', 'honeypot', 'blacklist']
+    print(vet_list)
+    if change_status is None:
+        for i in vet_list:
+            if i is not None and i != []:
+                return 'Please select the option, the entries have to be ' \
+                       'changed to.', None
+        return 'Please select the entries on the left whose status has to be ' \
+               'changed and also select the option, the entries have to be ' \
+               'changed to.', None
     else:
-        print(n_clicks, nv_select, benignv_select, hv_select, blackv_select, domain_vet)
-        return 'Test Selection', None
+        for i, j in zip(vet_list, es_vet_list_names):
+            if i is not None and i != []:
+                if change_status in j:
+                    return 'Please enter a different option to change the ' \
+                           'status.', None
+                else:
+                    body_to_change = es.get(index=j, id=1)['_source']
+                    body_to_change_keys = \
+                        list(es.get(index=j, id=1)['_source'].keys())
+
+                    for k in i:
+                        body_to_update = \
+                            {'doc':
+                                 {body_to_change_keys[k]:
+                                      body_to_change[body_to_change_keys[k]]}}
+                        es.update(index=change_status, id=1, body=body_to_update)
+
+                    for k in i:
+                        del (body_to_change[body_to_change_keys[k]])
+                    es.index(j, id=1, body=body_to_change)
+                    return 'Status change successful.', None
+
+        return 'Please select the entries on the left whose status has to be ' \
+               'changed.', None
 
 
 @app.callback(Output('not_vetted_table', 'data'),
@@ -1104,7 +1141,8 @@ def update_blacklist_vet_table(n_intervals):
         data = [dict({'sl_no': j + 1, 'domain': i,
                       'class': blacklist_vet[i]['class'],
                       'acc': blacklist_vet[i]['acc']})
-                for i, j in zip(blacklist_vet.keys(), range(len(blacklist_vet)))]
+                for i, j in zip(blacklist_vet.keys(),
+                                range(len(blacklist_vet)))]
     except:
         data = []
     return data
