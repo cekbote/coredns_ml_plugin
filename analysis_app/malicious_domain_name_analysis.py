@@ -1059,7 +1059,6 @@ def update_and_input_vet_message_vet_tables(n_clicks, not_vetted_select,
     vet_list = [not_vetted_select, benign_vet_select, honeypot_vet_select,
                 blacklist_vet_select]
     es_vet_list_names = ['not_vetted', 'benign_vet', 'honeypot', 'blacklist']
-    print(vet_list)
     if change_status is None:
         for i in vet_list:
             if i is not None and i != []:
