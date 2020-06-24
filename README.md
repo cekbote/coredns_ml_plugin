@@ -205,8 +205,10 @@ the malicious domain names queried and also helps in identifying model
 misclassification.
 
 <p float="left" align = "center">
-  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/malicious_app_1.PNG" width="400"/>
-  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/malicious_app_2.PNG" width="400"/>
+  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/malicious_app_1.PNG" 
+  width="400"/>
+  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/malicious_app_2.PNG" 
+  width="400"/>
 </p>
 
 - __Analysis of Benign Domain Names:__ The application allows the user to
@@ -217,8 +219,10 @@ the benign domain names queried and also helps in identifying model
 misclassification.
 
 <p float="left" align = "center">
-  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/benign_app_1.PNG" width="420"/>
-  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/benign_app_2.PNG" width="420"/>
+  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/benign_app_1.PNG" width
+  ="400"/>
+  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/benign_app_2.PNG" width
+  ="400"/>
 </p>
 
 To run the Dash application `cd` into the `analysis_app` directory and then
