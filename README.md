@@ -70,6 +70,10 @@ The dataset was split as follows:
 Training: The deep-learning model is a Convolutional Neural Net that is 
 trained using batch gradient descent with the Adam optimizer.
 
+## In Depth Working
+
+![image info](./readme_assets/pipeline_explained.png)
+
 ## Implementation
 
 ### Machine Learning Plugin and CoreDNS Build
