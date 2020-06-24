@@ -70,9 +70,57 @@ The dataset was split as follows:
 Training: The deep-learning model is a Convolutional Neural Net that is 
 trained using batch gradient descent with the Adam optimizer.
 
-## In Depth Working
+## Inner Working
 
 ![image info](./readme_assets/pipeline_explained.png)
+
+### Machine Learning Plugin
+
+The machine learning plugin forwards a request to the Flask Server for domain
+name analysis. The Flask Server then processes the request and sends back
+whether the domain name is malicious or benign. If the domain name is malicious,
+the plugin prevents the fallthrough to other plugins and sends back a Honeypot 
+or Blackhole IP.
+
+### Flask Server
+
+The Flask Server first preprocessess the request forwarded from the 
+Machine Learning Plugin. The preprocesssed request is then sent to the machine 
+learning model where it infers whether it is benign or malicious.
+
+If the model is highly confident that the domain name is benign, a response is
+sent back to the Machine Learning Plugin that allows the fallthrough to other
+plugins. 
+
+If the model is highly confident that the domain name is malicious, a response 
+is sent back to the Machine Learning Plugin that prevents the fallthrough to 
+other plugins. Moreover, the Machine Learning Plugin sends back a Honeypot or a
+Blackhole IP to the user querying the malicious domain.
+
+If the model is not very confident about the its inference, then the the
+manually vetted lists are looked at. If the domain name exists in the benign
+domain list, then the same procedure is followed as described above for benign 
+domains. Similarly, if a malicious domain exists in the malicious domain list,
+then the same procedure is followed as described above for malicious domains.
+If the domain name is not present in any of the lists, then the same procedure 
+is followed as described above for benign domains, however, these domains are 
+stored in the database for manual vetting.
+
+In all the three above scenarios, the results as well as other metadata are 
+stored in the database.
+
+### Dash Application
+
+The Dash Application has two main use cases:
+
+- Historical Analysis: The application allows the user to historically analyse
+the frequency at which domains have been queried and the IP addresses of the 
+users querying those domains. Moreover, it also allows the user to investigate 
+the domains that the model is confident about, in order to vet false positives
+and false negatives. 
+- Manual Vetting: The application allows a user to manually vet domain names
+that the model is not confident about. It then stores these manually vetted
+lists in the database. 
 
 ## Implementation
 
