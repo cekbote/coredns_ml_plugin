@@ -223,16 +223,25 @@ the `tensorflow_model` directory.
 ### Visualization Dashboard
 
 To analyse and visualize the results stored in the in the Elasticsearch 
-database, a Dash Application was created. A demo of the application can be seen 
-below:
+database, a Dash Application was created. There are two main components to the 
+Visualization Dashboard :
+- Historical analysis: The application allows the user to historically analyse
+the frequency at which domains have been queried and the IP addresses of the 
+users querying those domains
+- Manual Vetting: The application allows a user to manually vet domain names
+that the model is not confident about
+
+#### Historical Analysis
+
+A demo of the application can be seen below:
 
 <p align = "center">
     <img style="float: right;" src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/dash_app_gif.gif">
 </p>
 
-The application has three main use cases:
+Historical Analysis has three main use cases:
 
-- __Domain Name Analysis:__ The application allows the user to search for a
+- Domain Name Analysis: The application allows the user to search for a
 a particular domain name along with a request time range. The application will 
 then search for that particular domain name in the Elasticsearch database. Once the 
 domain name is found, the app will display the number of requests to that 
@@ -242,10 +251,11 @@ particular domain name. This allows for a domain specific analysis.
 
 
 <p align = "center">
-  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/domain_name_app_1.PNG" width="700"/> 
+  <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/domain_name_app_1.PNG" 
+  width="700"/> 
 </p>
 
-- __Analysis of Malicious Domain Names:__ The application allows the user to
+- Analysis of Malicious Domain Names: The application allows the user to
 visualize the top 20 malicious domains queried, as a bar graph. It also displays 
 a list of all the malicious domains queried which can be seen via a toggle
 switch in the same window. This allows the user to gain a general picture of all
@@ -259,7 +269,7 @@ misclassification.
   width="400"/>
 </p>
 
-- __Analysis of Benign Domain Names:__ The application allows the user to
+- Analysis of Benign Domain Names: The application allows the user to
 visualize the top 20 benign domains queried, as a bar graph. It also displays 
 a list of all the benign domains queried which can be seen via a toggle
 switch in the same window. This allows the user to gain a general picture of all
@@ -271,6 +281,24 @@ misclassification.
   ="400"/>
   <img src="https://github.com/chanakyaekbote/coredns_ml_plugin/blob/master/readme_assets/benign_app_2.PNG" width
   ="400"/>
+</p>
+
+#### Manual Vetting
+
+A demo of the application can be seen below:
+
+<p align = "center">
+    <img style="float: right;" src="https://github.com/cekbote/coredns_ml_plugin/blob/master/readme_assets/manual_vetting.gif">
+</p>
+
+Manual Vetting allows the user to manually vet domain names that the model has 
+a low confidence on, thereby creating a new dataset of malicious or benign 
+domains. This dataset can be used for blocking or allowing domains and also for 
+retraining the model. 
+
+<p align = "center">
+  <img src="https://github.com/cekbote/coredns_ml_plugin/blob/master/readme_assets/manual_vetting_screenshot.PNG" 
+  width="700"/> 
 </p>
 
 To run the Dash application `cd` into the `analysis_app` directory and then
