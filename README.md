@@ -70,7 +70,7 @@ The dataset was split as follows:
 Training: The deep-learning model is a Convolutional Neural Net that is 
 trained using batch gradient descent with the Adam optimizer.
 
-## Inner Working
+## Inner Working of the Application
 
 ![image info](./readme_assets/pipeline_explained.png)
 
