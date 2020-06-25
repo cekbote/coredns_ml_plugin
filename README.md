@@ -294,7 +294,7 @@ A demo of the application can be seen below:
 Manual Vetting allows the user to manually vet domain names that the model has 
 a low confidence on, thereby creating a new dataset of malicious or benign 
 domains. This dataset can be used for blocking or allowing domains and also for 
-retraining the model. 
+updating the dataset for retraining the model. 
 
 <p align = "center">
   <img src="https://github.com/cekbote/coredns_ml_plugin/blob/master/readme_assets/manual_vetting_screenshot.PNG" 
