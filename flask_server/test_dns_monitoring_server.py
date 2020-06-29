@@ -1,5 +1,6 @@
 import unittest
 import numpy as np
+from datetime import datetime
 from elasticsearch import Elasticsearch
 from .dns_monitoring_server import string_to_ascii, \
     mal_and_benign_list_creation, vetted_list_creation, \
@@ -26,9 +27,9 @@ class TestDNSMonitoringServer(unittest.TestCase):
                 check = True
             else:
                 check = False
-            self.assertEqual(check, True)
+            self.assertTrue(check, 'Error: mal and benign list creation')
         except:
-            self.fail('Issue with the Elasticsearch Server')
+            self.fail('Error: Elasticsearch Server')
 
     def test_vetted_list_creation(self):
         try:
@@ -40,9 +41,9 @@ class TestDNSMonitoringServer(unittest.TestCase):
                 check = True
             else:
                 check = False
-            self.assertEqual(check, True)
+            self.assertTrue(check, 'Error: vetted list creation')
         except:
-            self.fail('Issue with the Elasticsearch Server')
+            self.fail('Error: Elasticsearch Server')
 
     def test_list_updation(self):
         dn_benign = 'test_benign.com'
@@ -59,12 +60,12 @@ class TestDNSMonitoringServer(unittest.TestCase):
             benign_metadata = \
                 self.es.get(index='benign', id=1)['_source'][dn_benign]
             mal_metadata = self.es.get(index='mal', id=1)['_source'][dn_mal]
-            not_vetted = self.es.get(index='not_vetted', id = 1)['_source']
+            not_vetted = self.es.get(index='not_vetted', id=1)['_source']
             if benign_metadata['count'] >= 1 and \
-                benign_metadata['status'] > 50:
+                    benign_metadata['status'] > 50:
                 check_benign = True
             if mal_metadata['count'] >= 1 and \
-                mal_metadata['status'] > 50:
+                    mal_metadata['status'] > 50:
                 check_mal = True
             if dn_mal in not_vetted.keys() and dn_benign in not_vetted.keys():
                 check_not_vet = True
@@ -73,9 +74,38 @@ class TestDNSMonitoringServer(unittest.TestCase):
             self.assertTrue(check_not_vet, 'Error: not vetted list')
 
         except:
-            self.fail('Issue with the Elasticsearch Server')
+            self.fail('Error: Elasticsearch Server')
 
-    # def update_historical_analysis
+    def test_update_historical_analysis(self):
+        domain_name = 'test_domain.com'
+        date_time = datetime.now()
+        ip = '127.23.12.32'
+        send = '0.55'
+
+        try:
+            update_historical_analysis(self.es, domain_name, ip, send,
+                                       date_time)
+
+            date = str(date_time.date())
+            year = str(date_time.date().year)
+            month = str(date_time.date().month)
+            day = str(date_time.date().day)
+            hour = str(date_time.time().hour)
+            minutes = str(date_time.time().minute)
+
+            check_creation = False
+
+            body = self.es.get(index=domain_name, id=1)['_source']
+            if date in body.keys() and year in body.keys() and 'status' in \
+                body.keys() and 'count' in body.keys():
+                check_creation = True
+
+            self.assertTrue(check_creation, 'Error: historical analysis'
+                                            'creation failed')
+
+        except:
+            self.fail('Error: Elasticsearch Server')
+
 
 
 if '__name__' == '__main__':
