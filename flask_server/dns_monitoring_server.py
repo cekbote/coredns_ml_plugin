@@ -4,18 +4,8 @@ from flask import Flask, jsonify, request
 import numpy as np
 from elasticsearch import Elasticsearch
 from datetime import datetime
-import tensorflow as tf
-from IPython.display import HTML, display
-import tabulate
-import seaborn as sns
-from tensorflow.keras import layers, models, optimizers
-from tensorflow.keras import backend as K
-from tensorflow.keras import losses
-from tensorflow.keras.utils import plot_model
-from sklearn.metrics import confusion_matrix
-import matplotlib.pyplot as plt
-import pandas as pd
-import csv
+from tensorflow.keras import models
+
 
 app = Flask(__name__)
 
