@@ -2,9 +2,7 @@ import unittest
 import numpy as np
 from datetime import datetime
 from elasticsearch import Elasticsearch
-from .dns_monitoring_server import string_to_ascii, \
-    mal_and_benign_list_creation, vetted_list_creation, \
-    list_updation, update_historical_analysis, app
+from .dns_monitoring_server import *
 
 
 class TestDNSMonitoringServer(unittest.TestCase):
@@ -105,7 +103,6 @@ class TestDNSMonitoringServer(unittest.TestCase):
 
         except:
             self.fail('Error: Elasticsearch Server')
-
 
 
 if '__name__' == '__main__':

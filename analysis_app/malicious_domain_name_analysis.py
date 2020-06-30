@@ -635,28 +635,21 @@ app.layout = html.Div(children=[
 ])
 
 
+# Non Decorated Functions
+
 # Historical Analysis
 
 # Control Messages
 
-
-@app.callback(Output('input_message', 'children'),
-              [Input('submit_input', 'n_clicks')],
-              [State('input_text', 'value')])
 def input_message(n_clicks, value):
     if value is None or value == '':
         return 'Please enter a Domain Name'
-    elif value in es.indices.get('*.com'):
+    elif value in es.indices.get('*'):
         return 'You have entered: ' + value
     else:
-        return 'Domain name does not exist in database'
+        return 'Domain Name does not exist in Database'
 
 
-@app.callback(Output('date_message', 'children'),
-              [Input('submit_input', 'n_clicks'),
-               Input('requests_freq', 'value'),
-               Input('date_range', 'start_date'),
-               Input('date_range', 'end_date')])
 def date_message(n_clicks, freq, start_date, end_date):
     if start_date is None or end_date is None:
         return 'Please enter the date range'
@@ -678,9 +671,6 @@ def date_message(n_clicks, freq, start_date, end_date):
         return 'Data from {} to {}'.format(start_date, end_date)
 
 
-@app.callback(Output('radio_button_message', 'children'),
-              [Input('submit_input', 'n_clicks'),
-               Input('requests_freq', 'value')])
 def radio_button_message(n_clicks, value):
     if value is None:
         return 'Please select an option'
@@ -688,10 +678,6 @@ def radio_button_message(n_clicks, value):
         return 'You have selected: ' + value
 
 
-@app.callback(Output('hour_range_message', 'children'),
-              [Input('requests_freq', 'value'),
-               Input('start_hour', 'value'),
-               Input('end_hour', 'value')])
 def hour_range_message(freq, start, end):
     if freq is None or freq == 'Day':
         return html.Div([])
@@ -716,11 +702,6 @@ def hour_range_message(freq, start, end):
             return 'Please enter integer values (0 to 24)'
 
 
-# Graphs and Div Updates
-
-
-@app.callback(Output('hour_range', 'style'),
-              [Input('requests_freq', 'value')])
 def display_hour_range(value):
     if value is None or value == 'Day':
         return {'display': 'none'}
@@ -728,9 +709,9 @@ def display_hour_range(value):
         return {'display': 'unset'}
 
 
-@app.callback(Output('pie_graph', 'figure'),
-              [Input('submit_input', 'n_clicks')],
-              [State('input_text', 'value')])
+# Graph and Div Updates
+
+
 def update_pie_graph(n_clicks, value):
     layout_pie = copy.deepcopy(layout)
     layout_pie["title"] = 'Prediction'
@@ -769,6 +750,66 @@ def update_pie_graph(n_clicks, value):
             )]
         figure = dict(data=data, layout=layout_pie)
         return figure
+
+
+# Dash Functions
+
+# Historical Analysis
+
+# Control Messages
+
+
+@app.callback(Output('input_message', 'children'),
+              [Input('submit_input', 'n_clicks')],
+              [State('input_text', 'value')])
+def input_message_dash(n_clicks, value):
+    return_input_message = input_message(n_clicks, value)
+    return return_input_message
+
+
+@app.callback(Output('date_message', 'children'),
+              [Input('submit_input', 'n_clicks'),
+               Input('requests_freq', 'value'),
+               Input('date_range', 'start_date'),
+               Input('date_range', 'end_date')])
+def date_message_dash(n_clicks, freq, start_date, end_date):
+    date_message_ = date_message(n_clicks, freq, start_date, end_date)
+    return date_message_
+
+
+@app.callback(Output('radio_button_message', 'children'),
+              [Input('submit_input', 'n_clicks'),
+               Input('requests_freq', 'value')])
+def radio_button_message_dash(n_clicks, value):
+    radio_button_message_ = radio_button_message(n_clicks, value)
+    return radio_button_message_
+
+
+@app.callback(Output('hour_range_message', 'children'),
+              [Input('requests_freq', 'value'),
+               Input('start_hour', 'value'),
+               Input('end_hour', 'value')])
+def hour_range_message_dash(freq, start, end):
+    hour_range_message_ = hour_range_message(freq, start, end)
+    return hour_range_message_
+
+
+# Graphs and Div Updates
+
+
+@app.callback(Output('hour_range', 'style'),
+              [Input('requests_freq', 'value')])
+def display_hour_range_dash(value):
+    display_hour_range_ = display_hour_range(value)
+    return display_hour_range_
+
+
+@app.callback(Output('pie_graph', 'figure'),
+              [Input('submit_input', 'n_clicks')],
+              [State('input_text', 'value')])
+def update_pie_graph_dash(n_clicks, value):
+    figure = update_pie_graph(n_clicks, value)
+    return figure
 
 
 @app.callback(Output('freq_graph', 'figure'),
@@ -1050,7 +1091,7 @@ def update_benign_bar_graph(value, interval):
                State('benign_vet_table', "derived_viewport_selected_rows"),
                State('honeypot_vet_table', "derived_viewport_selected_rows"),
                State('blacklist_vet_table', "derived_viewport_selected_rows"),
-               State('change_status', 'value'),])
+               State('change_status', 'value'), ])
 def update_and_input_vet_message_vet_tables(n_clicks, not_vetted_select,
                                             benign_vet_select,
                                             honeypot_vet_select,
