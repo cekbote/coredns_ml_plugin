@@ -20,8 +20,13 @@ class TestMaliciousDomainNameAnalysis(unittest.TestCase):
         self.es = Elasticsearch()
 
     def test_input_message(self):
-        input_message(1, None)
-        print('Work')
+        message_none = input_message(1, None)
+        message_domain_name = input_message(1, 'google.com')
+        message_not_existed = input_message(1, 'not_exist')
+        self.assertEqual(message_none, 'Please enter a Domain Name')
+        self.assertEqual(message_domain_name, 'You have entered: google.com')
+        self.assertEqual(message_not_existed, 'Domain Name does not exist in '
+                                              'Database')
 
 
 if '__name__' == '__main__':
