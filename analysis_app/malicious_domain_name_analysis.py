@@ -702,14 +702,14 @@ def hour_range_message(freq, start, end):
             return 'Please enter integer values (0 to 24)'
 
 
+# Graph and Div Updates
+
+
 def display_hour_range(value):
     if value is None or value == 'Day':
         return {'display': 'none'}
     else:
         return {'display': 'unset'}
-
-
-# Graph and Div Updates
 
 
 def update_pie_graph(n_clicks, value):
@@ -752,74 +752,6 @@ def update_pie_graph(n_clicks, value):
         return figure
 
 
-# Dash Functions
-
-# Historical Analysis
-
-# Control Messages
-
-
-@app.callback(Output('input_message', 'children'),
-              [Input('submit_input', 'n_clicks')],
-              [State('input_text', 'value')])
-def input_message_dash(n_clicks, value):
-    return_input_message = input_message(n_clicks, value)
-    return return_input_message
-
-
-@app.callback(Output('date_message', 'children'),
-              [Input('submit_input', 'n_clicks'),
-               Input('requests_freq', 'value'),
-               Input('date_range', 'start_date'),
-               Input('date_range', 'end_date')])
-def date_message_dash(n_clicks, freq, start_date, end_date):
-    date_message_ = date_message(n_clicks, freq, start_date, end_date)
-    return date_message_
-
-
-@app.callback(Output('radio_button_message', 'children'),
-              [Input('submit_input', 'n_clicks'),
-               Input('requests_freq', 'value')])
-def radio_button_message_dash(n_clicks, value):
-    radio_button_message_ = radio_button_message(n_clicks, value)
-    return radio_button_message_
-
-
-@app.callback(Output('hour_range_message', 'children'),
-              [Input('requests_freq', 'value'),
-               Input('start_hour', 'value'),
-               Input('end_hour', 'value')])
-def hour_range_message_dash(freq, start, end):
-    hour_range_message_ = hour_range_message(freq, start, end)
-    return hour_range_message_
-
-
-# Graphs and Div Updates
-
-
-@app.callback(Output('hour_range', 'style'),
-              [Input('requests_freq', 'value')])
-def display_hour_range_dash(value):
-    display_hour_range_ = display_hour_range(value)
-    return display_hour_range_
-
-
-@app.callback(Output('pie_graph', 'figure'),
-              [Input('submit_input', 'n_clicks')],
-              [State('input_text', 'value')])
-def update_pie_graph_dash(n_clicks, value):
-    figure = update_pie_graph(n_clicks, value)
-    return figure
-
-
-@app.callback(Output('freq_graph', 'figure'),
-              [Input('submit_input', 'n_clicks'), ],
-              [State('start_hour', 'value'),
-               State('end_hour', 'value'),
-               State('input_text', 'value'),
-               State('date_range', 'start_date'),
-               State('date_range', 'end_date'),
-               State('requests_freq', 'value')])
 def update_line_graph(n_clicks, start_hour, end_hour, input_value,
                       start_date, end_date, freq_value):
     layout_count = copy.deepcopy(layout)
@@ -917,9 +849,6 @@ def update_line_graph(n_clicks, start_hour, end_hour, input_value,
             return figure
 
 
-@app.callback(Output('ip_table_', 'data'),
-              [Input('submit_input', 'n_clicks')],
-              [State('input_text', 'value')])
 def update_ip_table(nclicks, value):
     if value is None or value == '':
         return []
@@ -936,8 +865,6 @@ def update_ip_table(nclicks, value):
         return data
 
 
-@app.callback(Output('mal_dns_table_div', 'style'),
-              [Input('mal_toggle_switch', 'value')])
 def display_mal_list(value):
     if value is False:
         return {'display': 'none'}
@@ -945,8 +872,6 @@ def display_mal_list(value):
         return {'display': 'unset'}
 
 
-@app.callback(Output('mal_bar_graph_div', 'style'),
-              [Input('mal_toggle_switch', 'value')])
 def display_mal_graph(value):
     if value is False:
         return {'display': 'unset'}
@@ -954,9 +879,6 @@ def display_mal_graph(value):
         return {'display': 'none'}
 
 
-@app.callback(Output('mal_dns_table', 'data'),
-              [Input('mal_toggle_switch', 'value'),
-               Input('interval', 'n_intervals')])
 def update_mal_dns_table(nclicks, value):
     try:
         mal = es.get(index='mal', id=1)['_source']
@@ -971,9 +893,6 @@ def update_mal_dns_table(nclicks, value):
     return data
 
 
-@app.callback(Output('mal_bar_graph', 'figure'),
-              [Input('mal_toggle_switch', 'value'),
-               Input('interval', 'n_intervals')])
 def update_mal_bar_graph(value, interval):
     try:
         mal = es.get(index='mal', id=1)['_source']
@@ -1007,8 +926,6 @@ def update_mal_bar_graph(value, interval):
     return figure
 
 
-@app.callback(Output('benign_dns_table_div', 'style'),
-              [Input('benign_toggle_switch', 'value')])
 def display_benign_list(value):
     if value is False:
         return {'display': 'none'}
@@ -1016,8 +933,6 @@ def display_benign_list(value):
         return {'display': 'unset'}
 
 
-@app.callback(Output('benign_bar_graph_div', 'style'),
-              [Input('benign_toggle_switch', 'value')])
 def display_benign_graph(value):
     if value is True:
         return {'display': 'none'}
@@ -1025,9 +940,6 @@ def display_benign_graph(value):
         return {'display': 'unset'}
 
 
-@app.callback(Output('benign_dns_table', 'data'),
-              [Input('mal_toggle_switch', 'value'),
-               Input('interval', 'n_intervals')])
 def update_benign_dns_table(nclicks, value):
     try:
         benign = es.get(index='benign', id=1)['_source']
@@ -1042,9 +954,6 @@ def update_benign_dns_table(nclicks, value):
     return data
 
 
-@app.callback(Output('benign_bar_graph', 'figure'),
-              [Input('benign_toggle_switch', 'value'),
-               Input('interval', 'n_intervals')])
 def update_benign_bar_graph(value, interval):
     try:
         benign = es.get(index='benign', id=1)['_source']
@@ -1078,20 +987,6 @@ def update_benign_bar_graph(value, interval):
     return figure
 
 
-# Manual Vetting
-
-@app.callback([Output('input_vet_message', 'children'),
-               Output('change_status', 'value'),
-               Output('not_vetted_table', "derived_viewport_selected_rows"),
-               Output('benign_vet_table', "derived_viewport_selected_rows"),
-               Output('honeypot_vet_table', "derived_viewport_selected_rows"),
-               Output('blacklist_vet_table', "derived_viewport_selected_rows")],
-              [Input('submit_vet_input', 'n_clicks')],
-              [State('not_vetted_table', "derived_viewport_selected_rows"),
-               State('benign_vet_table', "derived_viewport_selected_rows"),
-               State('honeypot_vet_table', "derived_viewport_selected_rows"),
-               State('blacklist_vet_table', "derived_viewport_selected_rows"),
-               State('change_status', 'value'), ])
 def update_and_input_vet_message_vet_tables(n_clicks, not_vetted_select,
                                             benign_vet_select,
                                             honeypot_vet_select,
@@ -1136,8 +1031,6 @@ def update_and_input_vet_message_vet_tables(n_clicks, not_vetted_select,
                'changed.', None, None, None, None, None
 
 
-@app.callback(Output('not_vetted_table', 'data'),
-              [Input('interval', 'n_intervals')])
 def update_not_vetted_table(n_intervals):
     try:
         not_vetted = es.get(index='not_vetted', id=1)['_source']
@@ -1150,8 +1043,6 @@ def update_not_vetted_table(n_intervals):
     return data
 
 
-@app.callback(Output('benign_vet_table', 'data'),
-              [Input('interval', 'n_intervals')])
 def update_benign_vet_table(n_intervals):
     try:
         benign_vet = es.get(index='benign_vet', id=1)['_source']
@@ -1164,8 +1055,6 @@ def update_benign_vet_table(n_intervals):
     return data
 
 
-@app.callback(Output('honeypot_vet_table', 'data'),
-              [Input('interval', 'n_intervals')])
 def update_honeypot_vet_table(n_intervals):
     try:
         honeypot_vet = es.get(index='honeypot', id=1)['_source']
@@ -1178,8 +1067,6 @@ def update_honeypot_vet_table(n_intervals):
     return data
 
 
-@app.callback(Output('blacklist_vet_table', 'data'),
-              [Input('interval', 'n_intervals')])
 def update_blacklist_vet_table(n_intervals):
     try:
         blacklist_vet = es.get(index='blacklist', id=1)['_source']
@@ -1190,6 +1077,205 @@ def update_blacklist_vet_table(n_intervals):
                                 range(len(blacklist_vet)))]
     except:
         data = []
+    return data
+
+
+# Dash Functions
+
+# Historical Analysis
+
+# Control Messages
+
+
+@app.callback(Output('input_message', 'children'),
+              [Input('submit_input', 'n_clicks')],
+              [State('input_text', 'value')])
+def input_message_dash(n_clicks, value):
+    return_input_message = input_message(n_clicks, value)
+    return return_input_message
+
+
+@app.callback(Output('date_message', 'children'),
+              [Input('submit_input', 'n_clicks'),
+               Input('requests_freq', 'value'),
+               Input('date_range', 'start_date'),
+               Input('date_range', 'end_date')])
+def date_message_dash(n_clicks, freq, start_date, end_date):
+    date_message_ = date_message(n_clicks, freq, start_date, end_date)
+    return date_message_
+
+
+@app.callback(Output('radio_button_message', 'children'),
+              [Input('submit_input', 'n_clicks'),
+               Input('requests_freq', 'value')])
+def radio_button_message_dash(n_clicks, value):
+    radio_button_message_ = radio_button_message(n_clicks, value)
+    return radio_button_message_
+
+
+@app.callback(Output('hour_range_message', 'children'),
+              [Input('requests_freq', 'value'),
+               Input('start_hour', 'value'),
+               Input('end_hour', 'value')])
+def hour_range_message_dash(freq, start, end):
+    hour_range_message_ = hour_range_message(freq, start, end)
+    return hour_range_message_
+
+
+# Graphs and Div Updates
+
+
+@app.callback(Output('hour_range', 'style'),
+              [Input('requests_freq', 'value')])
+def display_hour_range_dash(value):
+    display = display_hour_range(value)
+    return display
+
+
+@app.callback(Output('pie_graph', 'figure'),
+              [Input('submit_input', 'n_clicks')],
+              [State('input_text', 'value')])
+def update_pie_graph_dash(n_clicks, value):
+    figure = update_pie_graph(n_clicks, value)
+    return figure
+
+
+@app.callback(Output('freq_graph', 'figure'),
+              [Input('submit_input', 'n_clicks'), ],
+              [State('start_hour', 'value'),
+               State('end_hour', 'value'),
+               State('input_text', 'value'),
+               State('date_range', 'start_date'),
+               State('date_range', 'end_date'),
+               State('requests_freq', 'value')])
+def update_line_graph_dash(n_clicks, start_hour, end_hour, input_value,
+                           start_date, end_date, freq_value):
+    figure = update_line_graph(n_clicks, start_hour, end_hour, input_value,
+                               start_date, end_date, freq_value)
+    return figure
+
+
+@app.callback(Output('ip_table_', 'data'),
+              [Input('submit_input', 'n_clicks')],
+              [State('input_text', 'value')])
+def update_ip_table_dash(nclicks, value):
+    data = update_ip_table(nclicks, value)
+    return data
+
+
+@app.callback(Output('mal_dns_table_div', 'style'),
+              [Input('mal_toggle_switch', 'value')])
+def display_mal_list_dash(value):
+    display = display_mal_list(value)
+    return display
+
+
+@app.callback(Output('mal_bar_graph_div', 'style'),
+              [Input('mal_toggle_switch', 'value')])
+def display_mal_graph_dash(value):
+    display = display_mal_graph(value)
+    return display
+
+
+@app.callback(Output('mal_dns_table', 'data'),
+              [Input('mal_toggle_switch', 'value'),
+               Input('interval', 'n_intervals')])
+def update_mal_dns_table_dash(nclicks, value):
+    data = update_mal_dns_table(nclicks, value)
+    return data
+
+
+@app.callback(Output('mal_bar_graph', 'figure'),
+              [Input('mal_toggle_switch', 'value'),
+               Input('interval', 'n_intervals')])
+def update_mal_bar_graph_dash(value, interval):
+    figure = update_mal_bar_graph(value, interval)
+    return figure
+
+
+@app.callback(Output('benign_dns_table_div', 'style'),
+              [Input('benign_toggle_switch', 'value')])
+def display_benign_list_dash(value):
+    display = display_benign_list(value)
+    return display
+
+
+@app.callback(Output('benign_bar_graph_div', 'style'),
+              [Input('benign_toggle_switch', 'value')])
+def display_benign_graph_dash(value):
+    display = display_benign_graph(value)
+    return display
+
+
+@app.callback(Output('benign_dns_table', 'data'),
+              [Input('mal_toggle_switch', 'value'),
+               Input('interval', 'n_intervals')])
+def update_benign_dns_table_dash(nclicks, value):
+    data = update_benign_dns_table(nclicks, value)
+    return data
+
+
+@app.callback(Output('benign_bar_graph', 'figure'),
+              [Input('benign_toggle_switch', 'value'),
+               Input('interval', 'n_intervals')])
+def update_benign_bar_graph_dash(value, interval):
+    figure = update_benign_bar_graph(value, interval)
+    return figure
+
+
+# Manual Vetting
+
+@app.callback([Output('input_vet_message', 'children'),
+               Output('change_status', 'value'),
+               Output('not_vetted_table', "derived_viewport_selected_rows"),
+               Output('benign_vet_table', "derived_viewport_selected_rows"),
+               Output('honeypot_vet_table', "derived_viewport_selected_rows"),
+               Output('blacklist_vet_table', "derived_viewport_selected_rows")],
+              [Input('submit_vet_input', 'n_clicks')],
+              [State('not_vetted_table', "derived_viewport_selected_rows"),
+               State('benign_vet_table', "derived_viewport_selected_rows"),
+               State('honeypot_vet_table', "derived_viewport_selected_rows"),
+               State('blacklist_vet_table', "derived_viewport_selected_rows"),
+               State('change_status', 'value'), ])
+def update_and_input_vet_message_vet_tables_dash(n_clicks, not_vetted_select,
+                                                 benign_vet_select,
+                                                 honeypot_vet_select,
+                                                 blacklist_vet_select,
+                                                 change_status):
+    message, _, _, _, _, _ = update_and_input_vet_message_vet_tables(n_clicks,
+                                                                     not_vetted_select,
+                                                                     benign_vet_select,
+                                                                     honeypot_vet_select,
+                                                                     blacklist_vet_select,
+                                                                     change_status)
+    return message, None, None, None, None, None
+
+
+@app.callback(Output('not_vetted_table', 'data'),
+              [Input('interval', 'n_intervals')])
+def update_not_vetted_table_dash(n_intervals):
+    data = update_not_vetted_table(n_intervals)
+    return data
+
+
+@app.callback(Output('benign_vet_table', 'data'),
+              [Input('interval', 'n_intervals')])
+def update_benign_vet_table_dash(n_intervals):
+    data = update_benign_vet_table(n_intervals)
+    return data
+
+
+@app.callback(Output('honeypot_vet_table', 'data'),
+              [Input('interval', 'n_intervals')])
+def update_honeypot_vet_table_dash(n_intervals):
+    data = update_honeypot_vet_table(n_intervals)
+    return data
+
+
+@app.callback(Output('blacklist_vet_table', 'data'),
+              [Input('interval', 'n_intervals')])
+def update_blacklist_vet_table_dash(n_intervals):
+    data = update_blacklist_vet_table(n_intervals)
     return data
 
 
