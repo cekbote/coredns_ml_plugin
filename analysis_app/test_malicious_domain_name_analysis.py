@@ -21,6 +21,10 @@ class TestMaliciousDomainNameAnalysis(unittest.TestCase):
     def setUp(self):
         self.es = Elasticsearch()
 
+    # Historical Analysis
+
+    # Control Messages
+
     def test_input_message(self):
         message_none = input_message(1, None)
         message_domain_name = input_message(1, 'google.com')
@@ -72,6 +76,16 @@ class TestMaliciousDomainNameAnalysis(unittest.TestCase):
 
         self.assertEqual(message_none, 'Enter an integer hour range (0 to 24)')
         self.assertTrue(check)
+
+    # Graph and Div Updates
+
+    def test_display_hour_range(self):
+        display_none = display_hour_range('Day')
+        display_option = display_hour_range('')
+
+        self.assertEqual(display_none['display'], 'none')
+        self.assertEqual(display_option['display'], 'unset')
+
 
 
 if '__name__' == '__main__':
