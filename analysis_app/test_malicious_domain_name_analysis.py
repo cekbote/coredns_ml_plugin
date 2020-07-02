@@ -95,6 +95,51 @@ class TestMaliciousDomainNameAnalysis(unittest.TestCase):
         self.assertTrue(figure_benign['data'][0]['values'][0] > 0.5)
         self.assertTrue(figure_mal['data'][0]['values'][0] < 0.5)
 
+    def test_update_line_graph(self):
+        figure_none = update_line_graph(1, None, None, None, None, None, None)
+        check = False
+        if 'data' in figure_none.keys() and 'layout' in figure_none.keys():
+            check = True
+
+        self.assertTrue(check)
+
+    def test_update_ip_table(self):
+        data_none = update_ip_table(1, None)
+
+        self.assertEqual(data_none, [])
+
+    def test_display_mal_list(self):
+        display_false = display_mal_list(False)
+        display_true = display_mal_list(True)
+
+        self.assertEqual(display_false['display'], 'none')
+        self.assertEqual(display_true['display'], 'unset')
+
+    def test_display_mal_graph(self):
+        display_false = display_mal_graph(False)
+        display_true = display_mal_graph(True)
+
+        self.assertEqual(display_false['display'], 'unset')
+        self.assertEqual(display_true['display'], 'none')
+
+    def test_update_mal_dns_table(self):
+        data = update_mal_dns_table(1, '')
+
+        self.assertTrue(len(data) > 0)
+
+    def test_update_mal_bar_graph(self):
+        figure = update_mal_bar_graph(1, '')
+        check = False
+        if 'data' in figure.keys() and 'layout' in figure.keys():
+            check = True
+
+        self.assertTrue(check)
+
+    
+
+
+
+
 
 if '__name__' == '__main__':
     unittest.main()
