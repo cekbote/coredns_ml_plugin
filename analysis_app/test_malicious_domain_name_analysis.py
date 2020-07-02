@@ -125,7 +125,7 @@ class TestMaliciousDomainNameAnalysis(unittest.TestCase):
     def test_update_mal_dns_table(self):
         data = update_mal_dns_table(1, '')
 
-        self.assertTrue(len(data) > 0)
+        self.assertTrue(len(data) >= 0)
 
     def test_update_mal_bar_graph(self):
         figure = update_mal_bar_graph(1, '')
@@ -152,7 +152,7 @@ class TestMaliciousDomainNameAnalysis(unittest.TestCase):
     def test_update_benign_dns_table(self):
         data = update_benign_dns_table(1, '')
 
-        self.assertTrue(len(data) > 0)
+        self.assertTrue(len(data) >= 0)
 
     def test_update_benign_bar_graph(self):
         figure = update_benign_bar_graph(1, '')
@@ -161,6 +161,28 @@ class TestMaliciousDomainNameAnalysis(unittest.TestCase):
             check = True
 
         self.assertTrue(check)
+
+    # Manual Vetting
+
+    def test_update_not_vetted_table(self):
+        data = update_not_vetted_table('')
+
+        self.assertTrue(len(data) >= 0)
+
+    def test_update_benign_vet_table(self):
+        data = update_benign_vet_table('')
+
+        self.assertTrue(len(data) >= 0)
+
+    def test_update_honeypot_vet_table(self):
+        data = update_honeypot_vet_table('')
+
+        self.assertTrue(len(data) >= 0)
+
+    def test_update_blacklist_vet_table(self):
+        data = update_blacklist_vet_table('')
+
+        self.assertTrue(len(data) >= 0)
 
 
 if '__name__' == '__main__':
