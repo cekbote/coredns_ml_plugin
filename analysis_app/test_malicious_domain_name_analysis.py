@@ -135,10 +135,32 @@ class TestMaliciousDomainNameAnalysis(unittest.TestCase):
 
         self.assertTrue(check)
 
-    
+    def test_display_benign_list(self):
+        display_false = display_benign_list(False)
+        display_true = display_benign_list(True)
 
+        self.assertEqual(display_false['display'], 'none')
+        self.assertEqual(display_true['display'], 'unset')
 
+    def test_display_benign_graph(self):
+        display_false = display_benign_graph(False)
+        display_true = display_benign_graph(True)
 
+        self.assertEqual(display_false['display'], 'unset')
+        self.assertEqual(display_true['display'], 'none')
+
+    def test_update_benign_dns_table(self):
+        data = update_benign_dns_table(1, '')
+
+        self.assertTrue(len(data) > 0)
+
+    def test_update_benign_bar_graph(self):
+        figure = update_benign_bar_graph(1, '')
+        check = False
+        if 'data' in figure.keys() and 'layout' in figure.keys():
+            check = True
+
+        self.assertTrue(check)
 
 
 if '__name__' == '__main__':
