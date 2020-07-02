@@ -8,9 +8,11 @@ from dash.dependencies import Input, Output, State
 import copy
 from elasticsearch import Elasticsearch
 import numpy as np
+import datetime
 import unittest
 import os
 from .malicious_domain_name_analysis import *
+from faker import Faker
 from unittest import mock
 
 
@@ -27,6 +29,25 @@ class TestMaliciousDomainNameAnalysis(unittest.TestCase):
         self.assertEqual(message_domain_name, 'You have entered: google.com')
         self.assertEqual(message_not_existed, 'Domain Name does not exist in '
                                               'Database')
+
+    def test_date_message(self):
+        message_none = date_message(1, '', None, None)
+
+        check = False
+        random_option = ['Minute', 'Hour', 'Day']
+        option = random_option[np.random.randint(0, 3)]
+        fake = Faker()
+        start_date = datetime.date(year=2020, month=1, day=1)
+        end_date = datetime.datetime.now().date()
+        date_start = fake.date_between(start_date=start_date, end_date=end_date)
+        date_end = fake.date_between(start_date=date_start, end_date=end_date)
+        message_option = date_message(1, option, str(date_start), str(date_end))
+
+        if 'Data from' in message_option or 'please enter' in message_option:
+            check = True
+
+        self.assertEqual(message_none, 'Please enter the date range')
+        self.assertTrue(check)
 
 
 if '__name__' == '__main__':
