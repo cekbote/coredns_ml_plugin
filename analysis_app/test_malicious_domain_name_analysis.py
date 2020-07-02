@@ -86,6 +86,14 @@ class TestMaliciousDomainNameAnalysis(unittest.TestCase):
         self.assertEqual(display_none['display'], 'none')
         self.assertEqual(display_option['display'], 'unset')
 
+    def test_update_pie_graph(self):
+        figure_none = update_pie_graph(1, None)
+        figure_benign = update_pie_graph(1, 'google.com')
+        figure_mal = update_pie_graph(1, '1-remont.com')
+
+        self.assertTrue(figure_none['data'][0]['values'][0] == 0.5)
+        self.assertTrue(figure_benign['data'][0]['values'][0] > 0.5)
+        self.assertTrue(figure_mal['data'][0]['values'][0] < 0.5)
 
 
 if '__name__' == '__main__':

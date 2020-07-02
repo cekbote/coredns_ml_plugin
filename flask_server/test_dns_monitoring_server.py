@@ -95,7 +95,7 @@ class TestDNSMonitoringServer(unittest.TestCase):
 
             body = self.es.get(index=domain_name, id=1)['_source']
             if date in body.keys() and year in body.keys() and 'status' in \
-                body.keys() and 'count' in body.keys():
+                    body.keys() and 'count' in body.keys():
                 check_creation = True
 
             self.assertTrue(check_creation, 'Error: historical analysis'
