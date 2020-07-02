@@ -49,6 +49,30 @@ class TestMaliciousDomainNameAnalysis(unittest.TestCase):
         self.assertEqual(message_none, 'Please enter the date range')
         self.assertTrue(check)
 
+    def test_radio_button_message(self):
+        message_none = radio_button_message(1, None)
+        message_option = radio_button_message(1, 'Test_Option')
+
+        self.assertEqual(message_none, 'Please select an option')
+        self.assertEqual(message_option, 'You have selected: Test_Option')
+
+    def test_hour_range_message(self):
+        message_none = hour_range_message('', None, None)
+
+        random_option = ['Minute', 'Hour']
+        random_choice = random_option[np.random.randint(0, 2)]
+        start = np.random.randint(0, 24)
+        end = np.random.randint(start, 25)
+        message_option = hour_range_message(random_choice, start, end)
+        check = False
+
+        if 'Hour range' in message_option or 'Please enter' in message_option \
+                or 'The difference' in message_option:
+            check = True
+
+        self.assertEqual(message_none, 'Enter an integer hour range (0 to 24)')
+        self.assertTrue(check)
+
 
 if '__name__' == '__main__':
     unittest.main()
