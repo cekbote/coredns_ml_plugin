@@ -164,6 +164,15 @@ class TestMaliciousDomainNameAnalysis(unittest.TestCase):
 
     # Manual Vetting
 
+    def test_update_and_input_vet_message_vet_tables(self):
+
+        message_none, _, _, _, _, _, = update_and_input_vet_message_vet_tables(
+            None, None, None, None, None, None)
+        check = False
+        if 'Please select' in message_none:
+            check = True
+        self.assertTrue(check)
+
     def test_update_not_vetted_table(self):
         data = update_not_vetted_table('')
 

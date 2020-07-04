@@ -987,6 +987,9 @@ def update_benign_bar_graph(value, interval):
     return figure
 
 
+# Manual Vetting
+
+
 def update_and_input_vet_message_vet_tables(n_clicks, not_vetted_select,
                                             benign_vet_select,
                                             honeypot_vet_select,
