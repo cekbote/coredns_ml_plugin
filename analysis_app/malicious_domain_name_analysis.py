@@ -8,8 +8,6 @@ from dash.dependencies import Input, Output, State
 import copy
 from elasticsearch import Elasticsearch
 import numpy as np
-import plotly.express as px
-import plotly.graph_objects as go
 
 es = Elasticsearch()
 
