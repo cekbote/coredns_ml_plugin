@@ -220,7 +220,7 @@ app.layout = html.Div(children=[
                                         },
                                     )
                                 ], )
-                            ], label='Queries per IP Address', value='tab-2',
+                            ], label='IP Address', value='tab-2',
                                 className='pretty_container', id='ip_table'),
                             dcc.Tab([
                                 daq.ToggleSwitch(
@@ -369,6 +369,129 @@ app.layout = html.Div(children=[
                             ],
                                 label='Benign Domains',
                                 value='tab-4', className='pretty_container'),
+
+                            dcc.Tab([
+                                html.Div([
+                                    html.Div([
+
+                                        html.Br(),
+
+                                        html.P(['Domain Name: '],
+                                               style={'display': 'inline',
+                                                      'color': '#2e86c1',
+                                                      'font-size': '18px'},),
+                                        html.P([],
+                                               style={'display': 'inline',
+                                                      'color': '#2e86c1',
+                                                      'font-size': '18px'
+                                                      },
+                                               id='whois_domain')
+
+                                    ], style={'margin-bottom': '10px',
+                                              'margin-top': '10px'}),
+
+                                    html.Div([
+                                        html.P(['IP Addresses: '],
+                                               style={'display': 'inline',
+                                                      'color': '#2e86c1',
+                                                      'font-size': '18px'}, ),
+                                        html.P([],
+                                               style={'display': 'inline',
+                                                      'color': '#2e86c1',
+                                                      'font-size': '18px'
+                                                      },
+                                               id='whois_ips')
+
+                                    ], style={'margin-bottom': '10px'}),
+
+                                    html.Div([
+                                        html.P(['Host Names: '],
+                                               style={'display': 'inline',
+                                                      'color': '#2e86c1',
+                                                      'font-size': '18px'}, ),
+                                        html.P([],
+                                               style={'display': 'inline',
+                                                      'color': '#2e86c1',
+                                                      'font-size': '18px'
+                                                      },
+                                               id='whois_hostnames')
+
+                                    ], style={'margin-bottom': '10px'}),
+
+                                    html.Div([
+                                        html.P(['City: '],
+                                               style={'display': 'inline',
+                                                      'color': '#2e86c1',
+                                                      'font-size': '18px'}, ),
+                                        html.P([],
+                                               style={'display': 'inline',
+                                                      'color': '#2e86c1',
+                                                      'font-size': '18px'
+                                                      },
+                                               id='whois_city')
+
+                                    ], style={'margin-bottom': '10px'}),
+
+                                    html.Div([
+                                        html.P(['State: '],
+                                               style={'display': 'inline',
+                                                      'color': '#2e86c1',
+                                                      'font-size': '18px'}, ),
+                                        html.P([],
+                                               style={'display': 'inline',
+                                                      'color': '#2e86c1',
+                                                      'font-size': '18px'
+                                                      },
+                                               id='whois_state')
+
+                                    ], style={'margin-bottom': '10px'}),
+
+                                    html.Div([
+                                        html.P(['Country: '],
+                                               style={'display': 'inline',
+                                                      'color': '#2e86c1',
+                                                      'font-size': '18px'}, ),
+                                        html.P([],
+                                               style={'display': 'inline',
+                                                      'color': '#2e86c1',
+                                                      'font-size': '18px'
+                                                      },
+                                               id='whois_country')
+
+                                    ], style={'margin-bottom': '10px'}),
+
+                                    html.Div([
+                                        html.P(['Date Registered: '],
+                                               style={'display': 'inline',
+                                                      'color': '#2e86c1',
+                                                      'font-size': '18px'}, ),
+                                        html.P([],
+                                               style={'display': 'inline',
+                                                      'color': '#2e86c1',
+                                                      'font-size': '18px'
+                                                      },
+                                               id='whois_date')
+
+                                    ], style={'margin-bottom': '10px'}),
+
+                                    html.Div([
+                                        html.P(['Registrar: '],
+                                               style={'display': 'inline',
+                                                      'color': '#2e86c1',
+                                                      'font-size': '18px'}, ),
+                                        html.P([],
+                                               style={'display': 'inline',
+                                                      'color': '#2e86c1',
+                                                      'font-size': '18px'
+                                                      },
+                                               id='whois_registrar')
+
+                                    ], style={'margin-bottom': '10px'}),
+
+                                ], style={'margin-left': '40px'})
+
+                            ], label='WhoIS Info', value='tab-5',
+                                className='pretty_container')
 
                         ]),
 
