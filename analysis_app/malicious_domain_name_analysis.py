@@ -1111,7 +1111,6 @@ def update_benign_bar_graph(value, interval):
 
 
 def update_whois_info(n_clicks, domain_name):
-    
     whois_ip = ''
     whois_hostnames = ''
     whois_city = ''
@@ -1120,62 +1119,67 @@ def update_whois_info(n_clicks, domain_name):
     whois_date_registered = ''
     whois_registrar = ''
 
-    try:
-        api_key = 'Enter your WhoIS API key'
-        url = 'https://www.whoisxmlapi.com/whoisserver/WhoisService?' \
-              + 'domainName=' + domain_name + '&apiKey=' + api_key + \
-              "&outputFormat=JSON" + "&ip=1"
+    if domain_name is None or domain_name == '':
+        domain_name = ''
 
-        data = json.loads(urlopen(url).read().decode('utf8'))
+    else:
 
-        if 'ErrorMessage' in data.keys():
+        try:
+            api_key = 'Enter your WhoIS API key'
+            url = 'https://www.whoisxmlapi.com/whoisserver/WhoisService?' \
+                  + 'domainName=' + domain_name + '&apiKey=' + api_key + \
+                  "&outputFormat=JSON" + "&ip=1"
 
-            domain_name = data['msg']
+            data = json.loads(urlopen(url).read().decode('utf8'))
 
-        else:
+            if 'ErrorMessage' in data.keys():
 
-            try:
-                ips = data['WhoisRecord']['ips']
-                for i in ips:
-                    whois_ip = whois_ip + i + ' '
-            except:
-                whois_ip = '-'
+                domain_name = data['msg']
 
-            try:
-                hostnames = data['WhoisRecord']['nameServers']['hostNames']
-                for i in hostnames:
-                    whois_hostnames = whois_hostnames + i + ' '
-            except:
-                whois_hostnames = '-'
+            else:
 
-            try:
-                whois_city = data['WhoisRecord']['registrant']['city']
-            except:
-                whois_city = '-'
+                try:
+                    ips = data['WhoisRecord']['ips']
+                    for i in ips:
+                        whois_ip = whois_ip + i + ' '
+                except:
+                    whois_ip = '-'
 
-            try:
-                whois_state = data['WhoisRecord']['registrant']['state']
-            except:
-                whois_state = '-'
+                try:
+                    hostnames = data['WhoisRecord']['nameServers']['hostNames']
+                    for i in hostnames:
+                        whois_hostnames = whois_hostnames + i + ' '
+                except:
+                    whois_hostnames = '-'
 
-            try:
-                whois_country = data['WhoisRecord']['registrant']['country']
-            except:
-                whois_country = '-'
+                try:
+                    whois_city = data['WhoisRecord']['registrant']['city']
+                except:
+                    whois_city = '-'
 
-            try:
-                whois_date_registered = \
-                    data['WhoisRecord']['audit']['createdDate']
-            except:
-                whois_date_registered = '-'
+                try:
+                    whois_state = data['WhoisRecord']['registrant']['state']
+                except:
+                    whois_state = '-'
 
-            try:
-                whois_registrar = data['WhoisRecord']['registrarName']
-            except:
-                whois_registrar = '-'
+                try:
+                    whois_country = data['WhoisRecord']['registrant']['country']
+                except:
+                    whois_country = '-'
 
-    except:
-        domain_name = domain_name + ' (WhoIS Unresponsive)'
+                try:
+                    whois_date_registered = \
+                        data['WhoisRecord']['audit']['createdDate']
+                except:
+                    whois_date_registered = '-'
+
+                try:
+                    whois_registrar = data['WhoisRecord']['registrarName']
+                except:
+                    whois_registrar = '-'
+
+        except:
+            domain_name = domain_name + ' (WhoIS Unresponsive)'
 
     return domain_name, whois_ip, whois_hostnames, whois_city, \
            whois_state, whois_country, whois_date_registered, whois_registrar
@@ -1418,6 +1422,25 @@ def update_benign_dns_table_dash(nclicks, value):
 def update_benign_bar_graph_dash(value, interval):
     figure = update_benign_bar_graph(value, interval)
     return figure
+
+
+@app.callback([Output('whois_domain', 'children'),
+               Output('whois_ips', 'children'),
+               Output('whois_hostnames', 'children'),
+               Output('whois_city', 'children'),
+               Output('whois_state', 'children'),
+               Output('whois_country', 'children'),
+               Output('whois_date', 'children'),
+               Output('whois_registrar', 'children')],
+              [Input('submit_input', 'n_clicks')],
+              [State('input_text', 'value')])
+def update_whois_info_dash(n_clicks, domain_name):
+    whois_domain, whois_ips, whois_hostnames, whois_city, whois_state, \
+    whois_country, whois_date, whois_registrar = \
+        update_whois_info(n_clicks, domain_name)
+
+    return whois_domain, whois_ips, whois_hostnames, whois_city, whois_state, \
+           whois_country, whois_date, whois_registrar
 
 
 # Manual Vetting
