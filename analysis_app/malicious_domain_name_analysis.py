@@ -765,9 +765,13 @@ app.layout = html.Div(children=[
 # Control Messages
 
 def input_message(n_clicks, value):
+    try:
+        keys = es.indices.get('*').keys()
+    except:
+        keys = []
     if value is None or value == '':
         return 'Please enter a Domain Name'
-    elif value in es.indices.get('*'):
+    elif value in keys:
         return 'You have entered: ' + value
     else:
         return 'Domain Name does not exist in Database'
@@ -1125,7 +1129,7 @@ def update_whois_info(n_clicks, domain_name):
     else:
 
         try:
-            api_key = 'Enter your WhoIS API key'
+            api_key = 'at_r4GfBsGDWwZpuaga703KB9HZBmG6S'
             url = 'https://www.whoisxmlapi.com/whoisserver/WhoisService?' \
                   + 'domainName=' + domain_name + '&apiKey=' + api_key + \
                   "&outputFormat=JSON" + "&ip=1"
