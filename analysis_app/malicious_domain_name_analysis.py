@@ -1173,7 +1173,7 @@ def update_whois_info(n_clicks, domain_name):
 
                 try:
                     whois_date_registered = \
-                        data['WhoisRecord']['audit']['createdDate']
+                        data['WhoisRecord']['registryData']['createdDateNormalized']
                 except:
                     whois_date_registered = '-'
 
