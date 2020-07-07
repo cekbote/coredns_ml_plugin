@@ -8,6 +8,8 @@ from dash.dependencies import Input, Output, State
 import copy
 from elasticsearch import Elasticsearch
 import numpy as np
+import json
+from urllib.request import urlopen
 
 es = Elasticsearch()
 
@@ -379,7 +381,7 @@ app.layout = html.Div(children=[
                                         html.P(['Domain Name: '],
                                                style={'display': 'inline',
                                                       'color': '#2e86c1',
-                                                      'font-size': '18px'},),
+                                                      'font-size': '18px'}, ),
                                         html.P([],
                                                style={'display': 'inline',
                                                       'color': '#2e86c1',
@@ -1106,6 +1108,77 @@ def update_benign_bar_graph(value, interval):
         )]
     figure = dict(data=data, layout=layout_bar)
     return figure
+
+
+def update_whois_info(n_clicks, domain_name):
+    
+    whois_ip = ''
+    whois_hostnames = ''
+    whois_city = ''
+    whois_state = ''
+    whois_country = ''
+    whois_date_registered = ''
+    whois_registrar = ''
+
+    try:
+        api_key = 'Enter your WhoIS API key'
+        url = 'https://www.whoisxmlapi.com/whoisserver/WhoisService?' \
+              + 'domainName=' + domain_name + '&apiKey=' + api_key + \
+              "&outputFormat=JSON" + "&ip=1"
+
+        data = json.loads(urlopen(url).read().decode('utf8'))
+
+        if 'ErrorMessage' in data.keys():
+
+            domain_name = data['msg']
+
+        else:
+
+            try:
+                ips = data['WhoisRecord']['ips']
+                for i in ips:
+                    whois_ip = whois_ip + i + ' '
+            except:
+                whois_ip = '-'
+
+            try:
+                hostnames = data['WhoisRecord']['nameServers']['hostNames']
+                for i in hostnames:
+                    whois_hostnames = whois_hostnames + i + ' '
+            except:
+                whois_hostnames = '-'
+
+            try:
+                whois_city = data['WhoisRecord']['registrant']['city']
+            except:
+                whois_city = '-'
+
+            try:
+                whois_state = data['WhoisRecord']['registrant']['state']
+            except:
+                whois_state = '-'
+
+            try:
+                whois_country = data['WhoisRecord']['registrant']['country']
+            except:
+                whois_country = '-'
+
+            try:
+                whois_date_registered = \
+                    data['WhoisRecord']['audit']['createdDate']
+            except:
+                whois_date_registered = '-'
+
+            try:
+                whois_registrar = data['WhoisRecord']['registrarName']
+            except:
+                whois_registrar = '-'
+
+    except:
+        domain_name = domain_name + ' (WhoIS Unresponsive)'
+
+    return domain_name, whois_ip, whois_hostnames, whois_city, \
+           whois_state, whois_country, whois_date_registered, whois_registrar
 
 
 # Manual Vetting
